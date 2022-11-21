@@ -7,33 +7,33 @@ using UnityEngine;
 namespace StayAwayGameController
 {
 
-    public struct FrameInput
-    {
-        /// <summary>
-        /// X轴
-        /// </summary>
-        public float XAxis;
-        /// <summary>
-        /// 按下跳跃
-        /// </summary>
-        public bool JumpDown;
-        /// <summary>
-        /// 按住跳跃
-        /// </summary>
-        public bool JumpPressed;
-        /// <summary>
-        /// 松开跳跃
-        /// </summary>
-        public bool JumpUp;
-        /// <summary>
-        /// 按下加速
-        /// </summary>
-        public bool ShiftDown;
-    }
-
     [RequireComponent(typeof(BoxCollider2D))]
     public class PonyController : MonoBehaviour
-    {
+    { 
+        public struct FrameInput
+        {
+            /// <summary>
+            /// X轴
+            /// </summary>
+            public float XAxis;
+            /// <summary>
+            /// 按下跳跃
+            /// </summary>
+            public bool JumpDown;
+            /// <summary>
+            /// 按住跳跃
+            /// </summary>
+            public bool JumpPressed;
+            /// <summary>
+            /// 松开跳跃
+            /// </summary>
+            public bool JumpUp;
+            /// <summary>
+            /// 按下加速
+            /// </summary>
+            public bool ShiftDown;
+        }
+
         #region 公有变量
         [Header("信息")]
         /// <summary>
@@ -106,6 +106,10 @@ namespace StayAwayGameController
         /// 滑翔重力减速度
         /// </summary>
         public float GlideGravityDeaccelerationRatio = 0.2f;
+        /// <summary>
+        /// 冲刺减速度
+        /// </summary>
+        public float DashDeaccelerationRatio = 0.5f;
 
 
         [Header("移动控制")]
@@ -133,6 +137,10 @@ namespace StayAwayGameController
         /// 允许滑翔前摇
         /// </summary>
         public float EnableGlideLeadUpTime = 0.1f;
+        /// <summary>
+        /// 冲刺冷却
+        /// </summary>
+        public float DashCoolDownTime = 1f;
         
 
         [Header("碰撞控制")]
@@ -173,7 +181,16 @@ namespace StayAwayGameController
         /// <summary>
         /// 启用反弹
         /// </summary>
-        public bool EnableBounce = true;
+        public bool EnableBounce = false;
+        /// <summary>
+        /// 启用滑翔
+        /// </summary>
+        public bool EnableGlide = true;
+        /// <summary>
+        /// 启用冲刺
+        /// </summary>
+        public bool EnableDash = true;
+
 
         #endregion
 
@@ -230,8 +247,12 @@ namespace StayAwayGameController
         /// <summary>
         /// 上次按下冲刺时间
         /// </summary>
-        private float _lastShiftPressedTime;
+        private float _lastUseDashTime;
 
+        /// <summary>
+        /// 冲刺可用性
+        /// </summary>
+        private bool DashUsability => this.EnableDash && Time.time - this._lastUseDashTime >= this.DashCoolDownTime;
         /// <summary>
         /// 计算野狼可用性
         /// </summary>
@@ -465,7 +486,7 @@ namespace StayAwayGameController
                 // 限制下落速度
                 this.Velocity.y = Mathf.Clamp(this.Velocity.y, -this.MaxVelocity.y, this.MaxVelocity.y);
                 // 计算滑翔
-                this.IsGliding = Input.JumpPressed && Time.time - this._leftGroundTime >= this.EnableGlideLeadUpTime;
+                this.IsGliding = this.EnableGlide && Input.JumpPressed && Time.time - this._leftGroundTime >= this.EnableGlideLeadUpTime;
                 if (IsGliding && this.Velocity.y  < - this.MaxVelocity.y * this.GlideSpeedRatio)
                 {
                     this.Velocity.y = Mathf.MoveTowards(this.Velocity.y, -this.MaxVelocity.y * this.GlideSpeedRatio, this.GlideGravityDeaccelerationRatio);
@@ -518,12 +539,20 @@ namespace StayAwayGameController
         }
         private void CalcWalk()
         {
+            if(Input.ShiftDown && this.DashUsability)
+            {
+                this._lastUseDashTime = Time.time;
+                // 计算冲刺速度
+                if(this.Velocity.x > 0)
+                    this.Velocity.x += this.MaxVelocity.x * this.DashSpeedRatio;
+                else if(this.Velocity.x < 0)
+                    this.Velocity.x -= this.MaxVelocity.x * this.DashSpeedRatio;
+            }
             if (this.Input.XAxis != 0)
             {
                 // 计算水平速度
                 this.Velocity.x += this.Input.XAxis * this.AccelerationX * Time.deltaTime;
-                // 限制水平速度
-                this.Velocity.x = Mathf.Clamp(this.Velocity.x, -this.MaxVelocity.x, this.MaxVelocity.x);
+                
                 // 顶点加速是否启用
                 var apexBonus = Mathf.Sign(this.Input.XAxis) * this.JumpApexBonus * _apexCoefficient;
                 this.Velocity.x += apexBonus * Time.deltaTime;
@@ -533,6 +562,12 @@ namespace StayAwayGameController
                 // 松开按键后减速
                 this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, 0, this.DeaccelerationX * Time.deltaTime);
             }
+
+            // 限制水平速度
+            if (this.Velocity.x > this.MaxVelocity.x)
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, this.MaxVelocity.x, 0.5f);
+            if (this.Velocity.x < -this.MaxVelocity.x)
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, -this.MaxVelocity.x, 0.5f);
 
             // 左右撞墙后停止
             if (this.Velocity.x < 0 && this.ColLeft || this.Velocity.x > 0 && this.ColRight)
