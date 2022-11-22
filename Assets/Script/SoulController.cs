@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,10 @@ namespace StayAwayGameController
 
         #region 公有变量
         [Header("信息")]
+        /// <summary>
+        /// 启用控制
+        /// </summary>
+        public Boolean EnableControl;
         /// <summary>
         /// 速度
         /// </summary>
@@ -164,11 +169,22 @@ namespace StayAwayGameController
         private void GatherInput()
         {
             // 获取键盘输入
-            this.Input = new FrameInput
+            if (this.EnableControl)
             {
-                XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
-                YAxis = UnityEngine.Input.GetAxisRaw("Vertical")
-            };
+                this.Input = new FrameInput
+                {
+                    XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
+                    YAxis = UnityEngine.Input.GetAxisRaw("Vertical")
+                };
+            }
+            else
+            {
+                this.Input = new FrameInput
+                {
+                    XAxis = 0,
+                    YAxis = 0
+                };
+            }
         }
         #endregion
 

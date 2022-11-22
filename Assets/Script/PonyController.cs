@@ -5,7 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-namespace StayAwayGameController
+namespace StayAwayGameScript
 {
 
     [RequireComponent(typeof(BoxCollider2D))]
@@ -37,6 +37,10 @@ namespace StayAwayGameController
 
         #region 公有变量
         [Header("信息")]
+        /// <summary>
+        /// 启用控制
+        /// </summary>
+        public Boolean EnableControl;
         /// <summary>
         /// 速度
         /// </summary>
@@ -324,17 +328,30 @@ namespace StayAwayGameController
         private void GatherInput()
         {
             // 获取键盘输入
-            this.Input = new FrameInput
+            if (this.EnableControl)
             {
-                XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
-                JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
-                JumpPressed = UnityEngine.Input.GetButton("Jump"),
-                JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
-                ShiftDown = UnityEngine.Input.GetKeyDown(KeyCode.LeftShift),
-            };
-            if (this.Input.JumpDown)
+                this.Input = new FrameInput
+                {
+                    XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
+                    JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
+                    JumpPressed = UnityEngine.Input.GetButton("Jump"),
+                    JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
+                    ShiftDown = UnityEngine.Input.GetKeyDown(KeyCode.LeftShift),
+                };
+                if (this.Input.JumpDown)
+                {
+                    this._lastJumpPressedTime = Time.time;
+                }
+            }else
             {
-                this._lastJumpPressedTime = Time.time;
+                this.Input = new FrameInput
+                {
+                    XAxis = 0,
+                    JumpDown = false,
+                    JumpPressed = false,
+                    JumpUp = false,
+                    ShiftDown = false,
+                };
             }
         }
         #endregion

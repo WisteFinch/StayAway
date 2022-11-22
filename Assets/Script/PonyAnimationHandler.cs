@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
-namespace StayAwayGameController
+namespace StayAwayGameScript
 {
     public class PonyAnimationHandler : MonoBehaviour
     {
@@ -43,7 +43,6 @@ namespace StayAwayGameController
         /// </summary>
         public float _nextEyesBlinkInterval;
 
-        // Start is called before the first frame update
         void Start()
         {
             this._controller = GetComponent<PonyController>();
@@ -54,7 +53,6 @@ namespace StayAwayGameController
             this._nextEyesBlinkInterval = this.EyesBlinkInterval + UnityEngine.Random.Range(-this.EyesBlinkRandomRange, this.EyesBlinkRandomRange);
         }
 
-        // Update is called once per frame
         void Update()
         { 
             if(this._lastEyesBlinkTime + this._nextEyesBlinkInterval <= Time.time)
