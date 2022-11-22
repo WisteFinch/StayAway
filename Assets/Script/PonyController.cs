@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -565,9 +566,9 @@ namespace StayAwayGameController
 
             // 限制水平速度
             if (this.Velocity.x > this.MaxVelocity.x)
-                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, this.MaxVelocity.x, 0.5f);
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, this.MaxVelocity.x, this.DashDeaccelerationRatio);
             if (this.Velocity.x < -this.MaxVelocity.x)
-                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, -this.MaxVelocity.x, 0.5f);
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, -this.MaxVelocity.x, this.DashDeaccelerationRatio);
 
             // 左右撞墙后停止
             if (this.Velocity.x < 0 && this.ColLeft || this.Velocity.x > 0 && this.ColRight)
