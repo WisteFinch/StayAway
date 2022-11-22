@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace StayAwayGameController
@@ -12,6 +13,14 @@ namespace StayAwayGameController
         /// 是否翻转
         /// </summary>
         public Boolean IsFlip = false;
+        /// <summary>
+        /// 眨眼间隔
+        /// </summary>
+        public float EyesBlinkInterval = 5f;
+        /// <summary>
+        /// 眨眼随机范围
+        /// </summary>
+        public float EyesBlinkRandomRange = 1f;
 
         /// <summary>
         /// 小马控制器
@@ -26,9 +35,13 @@ namespace StayAwayGameController
         /// </summary>
         private SpriteRenderer _renderer;
         /// <summary>
-        /// 是否翻转缓存
+        /// 上次眨眼时间
         /// </summary>
-        public Boolean _isFlipCache = false;
+        public float _lastEyesBlinkTime;
+        /// <summary>
+        /// 下次眨眼间隔
+        /// </summary>
+        public float _nextEyesBlinkInterval;
 
         // Start is called before the first frame update
         void Start()
@@ -36,26 +49,29 @@ namespace StayAwayGameController
             this._controller = GetComponent<PonyController>();
             this._animator = this.GetComponentInChildren<Animator>();
             this._renderer = this.GetComponentInChildren<SpriteRenderer>();
-            this._isFlipCache = false;
             this.IsFlip = false;
+            this._lastEyesBlinkTime = Time.time;
+            this._nextEyesBlinkInterval = this.EyesBlinkInterval + UnityEngine.Random.Range(-this.EyesBlinkRandomRange, this.EyesBlinkRandomRange);
         }
 
         // Update is called once per frame
         void Update()
-        {
+        { 
+            if(this._lastEyesBlinkTime + this._nextEyesBlinkInterval <= Time.time)
+            {
+                this._animator.SetTrigger("EyesBlink");
+                this._lastEyesBlinkTime = Time.time;
+                this._nextEyesBlinkInterval = this.EyesBlinkInterval + UnityEngine.Random.Range(-this.EyesBlinkRandomRange, this.EyesBlinkRandomRange);
+            }
             if (this._controller.Velocity.x > 0)
             {
-                this._isFlipCache = false; 
+                this.IsFlip = true;
             }
             else if (this._controller.Velocity.x < 0)
             {
-                this._isFlipCache = true;
+                this.IsFlip = false;
             }
-            if(this.IsFlip != this._isFlipCache)
-            {
-                this.IsFlip = this._isFlipCache;
-                this._renderer.flipX = !this.IsFlip;
-            }
+            this._renderer.flipX = this.IsFlip;
             this._animator.SetBool("IsTroting", this._controller.Velocity.x != 0);
             this._animator.SetBool("IsFlying", this._controller.IsGliding);
         }

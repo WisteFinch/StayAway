@@ -70,23 +70,23 @@ namespace StayAwayGameController
         /// <summary>
         /// 最大速度
         /// </summary>
-        public Vector2 MaxVelocity = new(20f, 120f);
+        public Vector2 MaxVelocity = new(2f, 12f);
         /// <summary>
         /// 重力加速度
         /// </summary>
-        public float GravityAcceleration = 100;
+        public float GravityAcceleration = 10;
         /// <summary>
         /// 顶点重力减益
         /// </summary>
-        public float GravityApexDerogation = 30;
+        public float GravityApexDerogation = 3;
         /// <summary>
         /// 加速度
         /// </summary>
-        public float AccelerationX = 90;
+        public float AccelerationX = 9;
         /// <summary>
         /// 减速度
         /// </summary>
-        public float DeaccelerationX = 60;
+        public float DeaccelerationX = 6;
         /// <summary>
         /// 顶点移速加成
         /// </summary>
@@ -102,26 +102,26 @@ namespace StayAwayGameController
         /// <summary>
         /// 滑翔速度倍率
         /// </summary>
-        public float GlideSpeedRatio = 0.2f;
+        public float GlideSpeedRatio = 0.1f;
         /// <summary>
         /// 滑翔重力减速度
         /// </summary>
-        public float GlideGravityDeaccelerationRatio = 0.2f;
+        public float GlideGravityDeaccelerationRatio = 0.025f;
         /// <summary>
         /// 冲刺减速度
         /// </summary>
-        public float DashDeaccelerationRatio = 0.5f;
+        public float DashDeacceleration = 12f;
 
 
         [Header("移动控制")]
         /// <summary>
         /// 跳跃高度
         /// </summary>
-        public float JumpVelocity = 30;
+        public float JumpVelocity = 5;
         /// <summary>
         /// 顶点阈值
         /// </summary>
-        public float JumpApexThreshold = 10;
+        public float JumpApexThreshold = 2;
         /// <summary>
         /// 野狼阈值
         /// </summary>
@@ -156,7 +156,7 @@ namespace StayAwayGameController
         /// <summary>
         /// 碰撞体圆角
         /// </summary>
-        public float CollisionRadius = 0.3f;
+        public float CollisionRadius = 0.1f;
         /// <summary>
         /// 反弹系数
         /// </summary>
@@ -551,12 +551,19 @@ namespace StayAwayGameController
             }
             if (this.Input.XAxis != 0)
             {
-                // 计算水平速度
-                this.Velocity.x += this.Input.XAxis * this.AccelerationX * Time.deltaTime;
-                
-                // 顶点加速是否启用
-                var apexBonus = Mathf.Sign(this.Input.XAxis) * this.JumpApexBonus * _apexCoefficient;
-                this.Velocity.x += apexBonus * Time.deltaTime;
+                // 计算水平速度 + 顶点加速
+                var delatVX = this.Input.XAxis * this.AccelerationX * Time.deltaTime + Mathf.Sign(this.Input.XAxis) * this.JumpApexBonus * _apexCoefficient;
+                if (Mathf.Abs(this.Velocity.x) <= this.MaxVelocity.x)
+                {
+                    if (Mathf.Abs(this.Velocity.x + delatVX) >= this.MaxVelocity.x)
+                    {
+                        this.Velocity.x = this.MaxVelocity.x * Mathf.Sign(this.Velocity.x);
+                    }
+                    else
+                    {
+                        this.Velocity.x += delatVX;
+                    }
+                }
             }
             else
             {
@@ -566,9 +573,9 @@ namespace StayAwayGameController
 
             // 限制水平速度
             if (this.Velocity.x > this.MaxVelocity.x)
-                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, this.MaxVelocity.x, this.DashDeaccelerationRatio);
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, this.MaxVelocity.x, this.DashDeacceleration * Time.deltaTime);
             if (this.Velocity.x < -this.MaxVelocity.x)
-                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, -this.MaxVelocity.x, this.DashDeaccelerationRatio);
+                this.Velocity.x = Mathf.MoveTowards(this.Velocity.x, -this.MaxVelocity.x, this.DashDeacceleration * Time.deltaTime);
 
             // 左右撞墙后停止
             if (this.Velocity.x < 0 && this.ColLeft || this.Velocity.x > 0 && this.ColRight)
