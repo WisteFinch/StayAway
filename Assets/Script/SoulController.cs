@@ -159,10 +159,6 @@ namespace StayAwayGameScript
         /// 当前导航点
         /// </summary>
         private int _AICurrentWayPoint = 0;
-        /// <summary>
-        /// 已达到终点
-        /// </summary>
-        private Boolean _AIReachEndOfPath = false;
 
         #endregion
 
@@ -412,7 +408,6 @@ namespace StayAwayGameScript
             // 重置AI
             CancelInvoke();
             this._AICurrentWayPoint = 0;
-            this._AIReachEndOfPath = false;
 
             if (enable)
             {
@@ -458,13 +453,8 @@ namespace StayAwayGameScript
             // 判断是否完成导航
             if(_AICurrentWayPoint >= this._AIPath.vectorPath.Count)
             {
-                this._AIReachEndOfPath = true;
                 this._AICurrentWayPoint = 0;
                 return;
-            }
-            else
-            {
-                this._AIReachEndOfPath = false;
             }
 
             // 与小马距离
@@ -472,7 +462,6 @@ namespace StayAwayGameScript
             // 到达距离停止
             if(targetDist <= this.AIEndDiatance)
             {
-                print(targetDist);
                 return;
             }
 

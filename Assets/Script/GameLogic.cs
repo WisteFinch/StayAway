@@ -18,9 +18,16 @@ namespace StayAwayGameScript
             /// 切换角色
             /// </summary>
             public bool ChangeCharacter;
+            /// <summary>
+            /// 切换角色
+            /// </summary>
+            public bool DisplayLight;
         }
 
         #region 公有变量
+        [Header("信息")]
+        public Boolean HasLight;
+
         [Header("对象")]
         /// <summary>
         /// 小马对象
@@ -70,6 +77,10 @@ namespace StayAwayGameScript
 
         [Header("特效")]
         /// <summary>
+        /// 灵魂透明的
+        /// </summary>
+        public float SoulPellucidity = 0.5f;
+        /// <summary>
         /// 产生幻觉特效距离
         /// </summary>
         public float IllusionDistance = 1f;
@@ -109,7 +120,24 @@ namespace StayAwayGameScript
         /// 距离环显示距离
         /// </summary>
         public float DistanceCircleDisplayDistance = 2;
+        /// <summary>
+        /// 小马灯颜色
+        /// </summary>
+        public Color PonyLightColorStart, PonyLightColorEnd;
+        /// <summary>
+        /// 灵魂灯颜色
+        /// </summary>
+        public Color SoulLightColorStart, SoulLightColorEnd;
 
+        [Header("物品")]
+        /// <summary>
+        /// 灯对象
+        /// </summary>
+        public UnityEngine.Object Light;
+        /// <summary>
+        /// 灯精灵贴图
+        /// </summary>
+        public Sprite LightPony, LightSoul;
 
         #endregion
 
@@ -166,6 +194,11 @@ namespace StayAwayGameScript
         /// 距离环脚本
         /// </summary>
         private CircleRender _distanceCircleScript;
+        /// <summary>
+        /// 显示灯
+        /// </summary>
+        private Boolean _displayedLight;
+
         #endregion
 
         void Start()
@@ -186,12 +219,27 @@ namespace StayAwayGameScript
             this.Pony.GetComponent<PonyController>().EnableControl = true;
             this.Soul.GetComponent<SoulController>().EnableControl = false;
             this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
+            this.Soul.GetComponent<SoulController>().SetAIEnable(true);
+
+            // Debug
+            this.HasLight = true;
+            this.DisplayLight(true);
+            Color c = Color.white;
+            c.a = this.SoulPellucidity;
+            this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
         }
 
         void Update()
         {
             GatherInput();
+
+            if(this.input.DisplayLight)
+            {
+                DisplayLight(!this._displayedLight);
+            }
+
             CalcDistance();
+            CalcItem();
             CalcView();
         }
 
@@ -201,6 +249,7 @@ namespace StayAwayGameScript
         void GatherInput()
         {
             this.input.ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R);
+            this.input.DisplayLight = UnityEngine.Input.GetKeyDown(KeyCode.L);
         }
 
         /// <summary>
@@ -341,15 +390,61 @@ namespace StayAwayGameScript
                     this.Soul.GetComponent<SoulController>().EnableControl = true;
                     this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
+                    this.Soul.GetComponentInChildren<SpriteRenderer>().color = Color.white;
                 }
                 else
                 {
                     this.Pony.GetComponent<PonyController>().EnableControl = true;
                     this.Soul.GetComponent<SoulController>().EnableControl = false;
-                    this.Soul.GetComponent<SoulController>().SetAIEnable(true);
+                    this.Soul.GetComponent<SoulController>().SetAIEnable(this.HasLight && this._displayedLight);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
+                    Color c = Color.white;
+                    c.a = this.SoulPellucidity;
+                    this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
                 }
                 this._currentCharacter = !this._currentCharacter;
+            }
+        }
+
+        // 计算物品
+        void CalcItem()
+        {
+            if (this.input.ChangeCharacter)
+            {
+                // 计算灯
+                TrailRenderer lightTrial = this.Light.GetComponent<TrailRenderer>();
+                if (!this._currentCharacter)
+                {
+                    lightTrial.startColor = this.PonyLightColorStart;
+                    lightTrial.endColor = this.PonyLightColorEnd;
+                    this.Light.GetComponent<SpriteRenderer>().sprite = this.LightPony;
+                }
+                else
+                {
+                    lightTrial.startColor = this.SoulLightColorStart;
+                    lightTrial.endColor = this.SoulLightColorEnd;
+                    this.Light.GetComponent<SpriteRenderer>().sprite = this.LightSoul;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 显示灯
+        /// </summary>
+        /// <param name="enable">启用</param>
+        void DisplayLight(Boolean enable)
+        {
+            if(enable && this.HasLight)
+            {
+                this._displayedLight = true;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(true);
+                this.Light.GameObject().SetActive(true);
+            }
+            else
+            {
+                this._displayedLight = false;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(false);
+                this.Light.GameObject().SetActive(false);
             }
         }
     }

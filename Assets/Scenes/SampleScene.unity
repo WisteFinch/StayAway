@@ -513,6 +513,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -864988007, guid: 820609b819324ff43b25c65a1b6d1794, type: 3}
     - target: {fileID: 1907533329180440324, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1907533329180440324, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
@@ -581,17 +585,9 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: Pony
-      value: 
-      objectReference: {fileID: 138718964}
-    - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: Soul
       value: 
       objectReference: {fileID: 962151937}
-    - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: CameraSize
-      value: 30
-      objectReference: {fileID: 0}
     - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: MainCamera
       value: 
@@ -600,14 +596,6 @@ PrefabInstance:
       propertyPath: GlobalVolume
       value: 
       objectReference: {fileID: 1714574758}
-    - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: FadingDistance
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: IllusionDistance
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
 --- !u!1 &1630537265
