@@ -120,7 +120,7 @@ npc：“哦哦哦，（名字）啊，让她去吧，希望她能有所收获�
 
 策划&美术：DuNεCK
 
-特别鸣谢：FloatingLight233、PonyTown
+特别鸣谢：FloatingLight233、PonyTown、坎特伯雷公主与骑士唤醒冠军之剑的奇幻冒险
 
 感谢游玩
 
