@@ -122,4 +122,8 @@ npc：“哦哦哦，（名字）啊，让她去吧，希望她能有所收获�
 
 特别鸣谢：FloatingLight233、PonyTown
 
+感谢游玩
+
+2022 Nova Gamejam作品
+
 ```
