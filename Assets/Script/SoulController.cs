@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace StayAwayGameController
+namespace StayAwayGameScript
 {
     [RequireComponent(typeof(BoxCollider2D))]
     public class SoulController : MonoBehaviour
@@ -47,15 +47,15 @@ namespace StayAwayGameController
         /// <summary>
         /// 最大速度
         /// </summary>
-        public Vector2 MaxVelocity = new(20f, 20f);
+        public Vector2 MaxVelocity = new(2f, 2f);
         /// <summary>
         /// 加速度
         /// </summary>
-        public Vector2 Acceleration = new(100, 100);
+        public Vector2 Acceleration = new(5f, 5f);
         /// <summary>
         /// 减速度
         /// </summary>
-        public Vector2 Deacceleration = new(50, 50);
+        public Vector2 Deacceleration = new(2f, 2f);
 
         [Header("移动控制")]
         /// <summary>
@@ -71,7 +71,7 @@ namespace StayAwayGameController
         /// <summary>
         /// 碰撞体圆角
         /// </summary>
-        public float CollisionRadius = 0.3f;
+        public float CollisionRadius = 0.1f;
         /// <summary>
         /// 反弹系数
         /// </summary>
@@ -327,7 +327,7 @@ namespace StayAwayGameController
             // Y轴
             if (this.Input.YAxis != 0)
             {
-                // 计算水平速度
+                // 计算垂直速度
                 this.Velocity.y += this.Input.YAxis * this.Acceleration.y * Time.deltaTime;
             }
             else
