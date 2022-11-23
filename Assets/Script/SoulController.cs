@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pathfinding;
+using Unity.VisualScripting;
 
 namespace StayAwayGameScript
 {
@@ -27,6 +29,10 @@ namespace StayAwayGameScript
         /// </summary>
         public Boolean EnableControl;
         /// <summary>
+        /// 启用AI
+        /// </summary>
+        public Boolean EnableAI;
+        /// <summary>
         /// 速度
         /// </summary>
         public Vector2 Velocity;
@@ -42,6 +48,28 @@ namespace StayAwayGameScript
         /// 碰撞面
         /// </summary>
         public bool ColUp, ColDown, ColLeft, ColRight;
+        /// <summary>
+        /// 小马对象
+        /// </summary>
+        public UnityEngine.Object Pony;
+
+        [Header("AI寻路")]
+        /// <summary>
+        /// AI速度率
+        /// </summary>
+        public Vector2 AIVelocityRatio = new(1, 1);
+        /// <summary>
+        /// 切换下一导航点距离
+        /// </summary>
+        public float AINextWayPointDistance = 1f;
+        /// <summary>
+        /// AI更新寻路间隔
+        /// </summary>
+        public float AIUpdatePathInterval = 0.5f;
+        /// <summary>
+        /// 停止距离
+        /// </summary>
+        public float AIEndDiatance = 3f;
 
         [Header("速度控制")]
         /// <summary>
@@ -116,6 +144,25 @@ namespace StayAwayGameScript
         /// 上一帧位置
         /// </summary>
         private Vector2 _lastPosition;
+        #endregion
+
+        #region AI寻路
+        /// <summary>
+        /// 导航路径
+        /// </summary>
+        private Path _AIPath;
+        /// <summary>
+        /// 寻路器
+        /// </summary>
+        private Seeker _AISeeker;
+        /// <summary>
+        /// 当前导航点
+        /// </summary>
+        private int _AICurrentWayPoint = 0;
+        /// <summary>
+        /// 已达到终点
+        /// </summary>
+        private Boolean _AIReachEndOfPath = false;
 
         #endregion
 
@@ -142,6 +189,9 @@ namespace StayAwayGameScript
                 useTriggers = false,
                 layerMask = this.LayerMask
             };
+
+            // 初始化AI
+            this._AISeeker = this.GetComponent<Seeker>();
         }
 
         void Update()
@@ -176,6 +226,15 @@ namespace StayAwayGameScript
                     XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
                     YAxis = UnityEngine.Input.GetAxisRaw("Vertical")
                 };
+            }
+            else if(this.EnableAI)
+            {
+                this.Input = new FrameInput
+                {
+                    XAxis = 0,
+                    YAxis = 0
+                };
+                UpdateAI();
             }
             else
             {
@@ -341,6 +400,97 @@ namespace StayAwayGameScript
             if (this.Velocity.y < 0 && this.ColDown || this.Velocity.y > 0 && this.ColUp)
             {
                 this.Velocity.y = this.EnableBounce ? Mathf.Abs(this.Velocity.y) >= this.BounceThreshold ? -this.Velocity.y * this.BounceCoefficient : 0 : 0;
+            }
+        }
+
+        #endregion
+
+        #region AI寻路
+
+        public void SetAIEnable(Boolean enable = false)
+        {
+            // 重置AI
+            CancelInvoke();
+            this._AICurrentWayPoint = 0;
+            this._AIReachEndOfPath = false;
+
+            if (enable)
+            {
+                // 启动AI
+                this.EnableAI = true;
+                InvokeRepeating("AIUpdatePath", 0f, this.AIUpdatePathInterval);
+            }
+            else
+            {
+                // 关闭AI
+                this.EnableAI = false;
+            }
+        }
+
+        public void AIUpdatePath()
+        {
+            if (this._AISeeker.IsDone())
+            {
+                this._AISeeker.StartPath(this.transform.position, this.Pony.GetComponent<Transform>().position, AIOnPathComplete);
+            }
+        }
+
+        /// <summary>
+        /// 路径搜索完成
+        /// </summary>
+        public void AIOnPathComplete(Path p)
+        {
+            if(!p.error)
+            {
+                this._AIPath = p;
+                _AICurrentWayPoint = 0;
+            }
+        }
+
+        public void UpdateAI()
+        {
+            // 无导航路径则结束
+            if (this._AIPath == null)
+            {
+                return;
+            }
+
+            // 判断是否完成导航
+            if(_AICurrentWayPoint >= this._AIPath.vectorPath.Count)
+            {
+                this._AIReachEndOfPath = true;
+                this._AICurrentWayPoint = 0;
+                return;
+            }
+            else
+            {
+                this._AIReachEndOfPath = false;
+            }
+
+            // 与小马距离
+            var targetDist = Vector2.Distance(this.transform.position, this.Pony.GetComponent<Transform>().position);
+            // 到达距离停止
+            if(targetDist <= this.AIEndDiatance)
+            {
+                print(targetDist);
+                return;
+            }
+
+            // 计算方向
+            Vector2 dir = ((Vector2)this._AIPath.vectorPath[this._AICurrentWayPoint] - (Vector2)this.transform.position).normalized;
+            // 模拟输入
+            this.Input = new FrameInput
+            {
+                XAxis = dir.x * this.AIVelocityRatio.x,
+                YAxis = dir.y * this.AIVelocityRatio.y
+            };
+
+            // 距离当前导航点距离
+            var wayPointDist = Vector2.Distance(this.transform.position, this._AIPath.vectorPath[this._AICurrentWayPoint]);
+            // 下一导航点
+            if(wayPointDist <= this.AINextWayPointDistance)
+            {
+                this._AICurrentWayPoint++;
             }
         }
 

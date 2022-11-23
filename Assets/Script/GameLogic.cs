@@ -72,7 +72,7 @@ namespace StayAwayGameScript
         /// <summary>
         /// 产生幻觉特效距离
         /// </summary>
-        public float IllusionDistance = 2f;
+        public float IllusionDistance = 1f;
         /// <summary>
         /// 幻觉特效强度
         /// </summary>
@@ -84,7 +84,7 @@ namespace StayAwayGameScript
         /// <summary>
         /// 褪色特效距离
         /// </summary>
-        public float FadingDistance = 2f;
+        public float FadingDistance = 1f;
         /// <summary>
         /// 褪色特效强度
         /// </summary>
@@ -339,12 +339,14 @@ namespace StayAwayGameScript
                 {
                     this.Pony.GetComponent<PonyController>().EnableControl = false;
                     this.Soul.GetComponent<SoulController>().EnableControl = true;
+                    this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
                 }
                 else
                 {
                     this.Pony.GetComponent<PonyController>().EnableControl = true;
                     this.Soul.GetComponent<SoulController>().EnableControl = false;
+                    this.Soul.GetComponent<SoulController>().SetAIEnable(true);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
                 }
                 this._currentCharacter = !this._currentCharacter;

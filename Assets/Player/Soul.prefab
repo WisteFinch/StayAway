@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 6509422917062338530}
   - component: {fileID: 6509422917062338533}
   - component: {fileID: 6219743950292505991}
+  - component: {fileID: 5428199508942096329}
+  - component: {fileID: 1511495666259006263}
   m_Layer: 0
   m_Name: Soul
   m_TagString: Untagged
@@ -179,12 +181,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableControl: 0
+  EnableAI: 0
   Velocity: {x: 0, y: 0}
   RelativeVelocity: {x: 0, y: 0}
   ColUp: 0
   ColDown: 0
   ColLeft: 0
   ColRight: 0
+  Pony: {fileID: 0}
+  AIVelocityRatio: {x: 1, y: 1}
+  AINextWayPointDistance: 1
+  AIUpdatePathInterval: 0.5
+  AIEndDiatance: 3
   MaxVelocity: {x: 2, y: 2}
   Acceleration: {x: 5, y: 5}
   Deacceleration: {x: 2, y: 2}
@@ -209,3 +217,73 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsFlip: 0
+--- !u!114 &5428199508942096329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6509422917062338535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373b52eb9bf8c40f785bb6947a1aee66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 1
+  drawGizmos: 1
+  detailedGizmos: 0
+  startEndModifier:
+    addPoints: 0
+    exactStartPoint: 3
+    exactEndPoint: 3
+    useRaycasting: 0
+    mask:
+      serializedVersion: 2
+      m_Bits: 4294967295
+    useGraphRaycasting: 0
+  traversableTags: -1
+  tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  graphMask:
+    value: -1
+--- !u!114 &1511495666259006263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6509422917062338535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6eb1402c17e84a9282a7f0f62eb584f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
+  radius: 0.18
+  height: 2
+  canMove: 0
+  maxSpeed: 2
+  gravity: {x: 0, y: 0, z: 0}
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  centerOffsetCompatibility: NaN
+  repathRateCompatibility: NaN
+  canSearchCompability: 0
+  orientation: 1
+  enableRotation: 0
+  autoRepath:
+    mode: 2
+    interval: 0.5
+    sensitivity: 10
+    maximumInterval: 2
+    visualizeSensitivity: 0
+  targetCompatibility: {fileID: 0}
+  maxAcceleration: -2.5
+  rotationSpeed: 360
+  slowdownDistance: 2
+  pickNextWaypointDist: 0.35
+  endReachedDistance: 2
+  alwaysDrawGizmos: 0
+  slowWhenNotFacingTarget: 1
+  whenCloseToDestination: 0
+  constrainInsideGraph: 0
