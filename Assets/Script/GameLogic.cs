@@ -32,6 +32,10 @@ namespace StayAwayGameScript
         /// </summary>
         public Boolean HasLight;
         /// <summary>
+        /// 拥有琴
+        /// </summary>
+        public Boolean HasLyra;
+        /// <summary>
         /// 小马死亡
         /// </summary>
         public Boolean PonyIsDead;
@@ -86,7 +90,7 @@ namespace StayAwayGameScript
         public float TooFarDeadDecayTime = 4f;
 
         [Header("视角")]
-        public float CameraSize = 30f;
+        public float CameraSize = 3f;
 
         [Header("特效")]
         /// <summary>
@@ -223,16 +227,19 @@ namespace StayAwayGameScript
             this._distanceCircleScript = this.GetComponentInChildren<CircleRender>();
 
             // 初始化
-            this.MainCamera.GetComponent<Camera>().fieldOfView = this.CameraSize;
+            this.MainCamera.GetComponent<Camera>().orthographicSize = this.CameraSize;
             this._currentCharacter = true;
             this.Pony.GetComponent<PonyController>().EnableControl = true;
             this.Soul.GetComponent<SoulController>().EnableControl = false;
             this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
-            this.Soul.GetComponent<SoulController>().SetAIEnable(true);
+            this.Soul.GetComponent<SoulController>().SetAIEnable(false);
+
+            this.HasLight = false;
+            this.HasLyra = false;
+
+            this.Light.GameObject().SetActive(false);
 
             // Debug
-            this.HasLight = true;
-            this.DisplayLight(true);
             Color c = Color.white;
             c.a = this.SoulPellucidity;
             this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
@@ -498,6 +505,18 @@ namespace StayAwayGameScript
                 this._currentCharacter = true;
 
                 this._volumeVGN.intensity.SetValue(new FloatParameter(0));
+            }
+        }
+
+        public void GetItem(StayAwayGame.Item item)
+        {
+            if(item == StayAwayGame.Item.ItemLyra)
+            {
+                this.HasLyra = true;
+            }
+            else if(item == StayAwayGame.Item.ItemLight)
+            {
+                this.HasLight = true;
             }
         }
     }
