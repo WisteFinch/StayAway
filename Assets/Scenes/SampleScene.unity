@@ -187,7 +187,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -520,6 +520,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1907533329180440325, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 1013079a9ed0f2842b3a867cc13d91bf, type: 2}
     - target: {fileID: 1907533329180440326, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: m_Layer
       value: 6

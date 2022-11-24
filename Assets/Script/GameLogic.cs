@@ -2,6 +2,7 @@ using StayAwayGameScript;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -26,7 +27,19 @@ namespace StayAwayGameScript
 
         #region 公有变量
         [Header("信息")]
+        /// <summary>
+        /// 拥有灯
+        /// </summary>
         public Boolean HasLight;
+        /// <summary>
+        /// 小马死亡
+        /// </summary>
+        public Boolean PonyIsDead;
+        /// <summary>
+        /// 灵魂死亡
+        /// </summary>
+        public Boolean SoulIsDead;
+
 
         [Header("对象")]
         /// <summary>
@@ -238,9 +251,12 @@ namespace StayAwayGameScript
                 DisplayLight(!this._displayedLight);
             }
 
-            CalcDistance();
+            if (!this.SoulIsDead)
+            {
+                CalcDistance();
+                CalcControl();
+            }
             CalcItem();
-            CalcView();
         }
 
         /// <summary>
@@ -264,7 +280,9 @@ namespace StayAwayGameScript
             {
                 if (this._tooCloseDeadRatio >= 1)
                 {
-                    // ================= Pony Dead =================
+                    // 小马死亡
+                    CharacterDead(true);
+                    return;
                 }
                 else
                 {
@@ -276,8 +294,8 @@ namespace StayAwayGameScript
                 if (this._tooCloseDeadRatio > 0)
                 {
                     this._tooCloseDeadRatio -= Time.deltaTime / this.TooCloseDeadDecayTime;
-                } 
-                else if(this._tooCloseDeadRatio < 0)
+                }
+                else if (this._tooCloseDeadRatio < 0)
                 {
                     this._tooCloseDeadRatio = 0;
                 }
@@ -309,7 +327,9 @@ namespace StayAwayGameScript
             {
                 if (this._tooFarDeadRatio >= 1)
                 {
-                    // ================= Soul Dead =================
+                    // 灵魂死亡
+                    CharacterDead(false);
+                    return;
                 }
                 else
                 {
@@ -349,8 +369,9 @@ namespace StayAwayGameScript
                 this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
             }
 
+
             // 计算距离环
-            if(this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance)
+            if (this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance)
             {
                 this._distanceCircleScript.Enable = true;
                 this._distanceCircleScript.R = this.MinimalPonyToSoulDistance;
@@ -374,13 +395,14 @@ namespace StayAwayGameScript
                 this._distanceCircleScript.DrawCircle();
                 this._distanceCircleScript.Enable = false;
             }
+
         }
 
 
         /// <summary>
-        /// 计算视角
+        /// 计算控制
         /// </summary>
-        void CalcView()
+        void CalcControl()
         {
             if (this.input.ChangeCharacter)
             {
@@ -391,18 +413,20 @@ namespace StayAwayGameScript
                     this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
                     this.Soul.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+                    this._currentCharacter = false;
+
                 }
                 else
                 {
                     this.Pony.GetComponent<PonyController>().EnableControl = true;
                     this.Soul.GetComponent<SoulController>().EnableControl = false;
-                    this.Soul.GetComponent<SoulController>().SetAIEnable(this.HasLight && this._displayedLight);
+                    this.Soul.GetComponent<SoulController>().SetAIEnable(! this.SoulIsDead && this.HasLight && this._displayedLight);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
                     Color c = Color.white;
                     c.a = this.SoulPellucidity;
                     this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+                    this._currentCharacter = true;
                 }
-                this._currentCharacter = !this._currentCharacter;
             }
         }
 
@@ -437,7 +461,7 @@ namespace StayAwayGameScript
             if(enable && this.HasLight)
             {
                 this._displayedLight = true;
-                this.Soul.GetComponent<SoulController>().SetAIEnable(true);
+                this.Soul.GetComponent<SoulController>().SetAIEnable(!this.SoulIsDead);
                 this.Light.GameObject().SetActive(true);
             }
             else
@@ -445,6 +469,52 @@ namespace StayAwayGameScript
                 this._displayedLight = false;
                 this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                 this.Light.GameObject().SetActive(false);
+            }
+        }
+
+        void CharacterDead(Boolean character)
+        {
+            // 清除特效
+            this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
+            this._volumeCHA.intensity.SetValue(new FloatParameter(0));
+            this._volumeBM.intensity.SetValue(new FloatParameter(0));
+            // 清除环
+            this._distanceCircleScript.SetColor(Color.clear);
+            this._distanceCircleScript.DrawCircle();
+            this._distanceCircleScript.Enable = false;
+
+            if (character)
+            {
+                // ======== Pony Dead ========
+                this.PonyIsDead = true;
+
+                // 死亡动画
+                this.Pony.GetComponentInChildren<Animator>().SetTrigger("Dead");
+
+                this.Pony.GetComponent<PonyController>().EnableControl = false;
+                this.Soul.GetComponent<SoulController>().EnableControl = false;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(!this.SoulIsDead && this.HasLight && this._displayedLight);
+                this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
+                Color c = Color.white;
+                c.a = this.SoulPellucidity;
+                this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+                this._currentCharacter = true;
+            }
+            else
+            {
+                this.SoulIsDead = true;
+
+                // 更改控制
+                this.Pony.GetComponent<PonyController>().EnableControl = true;
+                this.Soul.GetComponent<SoulController>().EnableControl = false;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(false);
+                this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
+                Color c = Color.white;
+                c.a = this.SoulPellucidity;
+                this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+                this._currentCharacter = true;
+
+                this._volumeVGN.intensity.SetValue(new FloatParameter(0));
             }
         }
     }
