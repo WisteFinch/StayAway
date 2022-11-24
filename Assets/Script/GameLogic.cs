@@ -147,10 +147,6 @@ namespace StayAwayGameScript
         /// 灯对象
         /// </summary>
         public UnityEngine.Object Light;
-        /// <summary>
-        /// 灯精灵贴图
-        /// </summary>
-        public Sprite LightPony, LightSoul;
 
         #endregion
 
@@ -413,6 +409,7 @@ namespace StayAwayGameScript
                     this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                     this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
                     this.Soul.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+                    this._volumeCAJ.hueShift.SetValue(new FloatParameter(180));
                     this._currentCharacter = false;
 
                 }
@@ -425,6 +422,7 @@ namespace StayAwayGameScript
                     Color c = Color.white;
                     c.a = this.SoulPellucidity;
                     this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+                    this._volumeCAJ.hueShift.SetValue(new FloatParameter(0));
                     this._currentCharacter = true;
                 }
             }
@@ -433,23 +431,7 @@ namespace StayAwayGameScript
         // 计算物品
         void CalcItem()
         {
-            if (this.input.ChangeCharacter)
-            {
-                // 计算灯
-                TrailRenderer lightTrial = this.Light.GetComponent<TrailRenderer>();
-                if (!this._currentCharacter)
-                {
-                    lightTrial.startColor = this.PonyLightColorStart;
-                    lightTrial.endColor = this.PonyLightColorEnd;
-                    this.Light.GetComponent<SpriteRenderer>().sprite = this.LightPony;
-                }
-                else
-                {
-                    lightTrial.startColor = this.SoulLightColorStart;
-                    lightTrial.endColor = this.SoulLightColorEnd;
-                    this.Light.GetComponent<SpriteRenderer>().sprite = this.LightSoul;
-                }
-            }
+
         }
 
         /// <summary>
@@ -478,6 +460,7 @@ namespace StayAwayGameScript
             this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
             this._volumeCHA.intensity.SetValue(new FloatParameter(0));
             this._volumeBM.intensity.SetValue(new FloatParameter(0));
+            this._volumeCAJ.hueShift.SetValue(new FloatParameter(0));
             // 清除环
             this._distanceCircleScript.SetColor(Color.clear);
             this._distanceCircleScript.DrawCircle();

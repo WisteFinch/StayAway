@@ -287,15 +287,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: -864988007, guid: 820609b819324ff43b25c65a1b6d1794, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.62, y: 0.68}
+  m_Size: {x: 0.62, y: 0.7}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1907533329401665013
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 1907533329401665019}
   - component: {fileID: 1907533329401665018}
   - component: {fileID: 7704078001692515450}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Pony
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -445,6 +445,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HasLight: 0
+  PonyIsDead: 0
+  SoulIsDead: 0
   Pony: {fileID: 1907533329401665013}
   Soul: {fileID: 0}
   MainCamera: {fileID: 0}
