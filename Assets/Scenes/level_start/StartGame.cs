@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace LevelStart
+namespace StayAwayGameLevelStart
 {
     public class StartGame : MonoBehaviour
     {

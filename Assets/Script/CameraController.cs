@@ -31,6 +31,15 @@ namespace StayAwayGameScript
         /// </summary>
         private Boolean _isChangingTarget;
 
+        /// <summary>
+        /// ±³¾°
+        /// </summary>
+        public GameObject BackGround;
+        /// <summary>
+        /// ±³¾°Æ«ÒÆÂÊ
+        /// </summary>
+        public float BackGroundOffsetRatio;
+
         void LateUpdate()
         {
             var distance = Vector2.Distance(this.transform.position, this._targetTransform.position);
@@ -50,6 +59,9 @@ namespace StayAwayGameScript
                     this.transform.position = new Vector3(pos.x, pos.y, -10);
                 }
             }
+
+            Vector2 offset = -this.transform.position * this.BackGroundOffsetRatio + this.transform.position;
+            this.BackGround.transform.position = new Vector3(offset.x, offset.y, 0);
         }
 
         public void SetTarget(UnityEngine.Object target)

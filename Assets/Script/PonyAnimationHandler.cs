@@ -48,7 +48,7 @@ namespace StayAwayGameScript
             this._controller = GetComponent<PonyController>();
             this._animator = this.GetComponentInChildren<Animator>();
             this._renderer = this.GetComponentInChildren<SpriteRenderer>();
-            this.IsFlip = false;
+            this.IsFlip = true;
             this._lastEyesBlinkTime = Time.time;
             this._nextEyesBlinkInterval = this.EyesBlinkInterval + UnityEngine.Random.Range(-this.EyesBlinkRandomRange, this.EyesBlinkRandomRange);
         }
