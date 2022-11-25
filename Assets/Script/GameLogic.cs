@@ -2,12 +2,15 @@ using StayAwayGameScript;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
 
 namespace StayAwayGameScript
 {
@@ -23,6 +26,10 @@ namespace StayAwayGameScript
             /// 切换角色
             /// </summary>
             public bool DisplayLight;
+            /// <summary>
+            /// 使用魔法
+            /// </summary>
+            public bool UseMagic;
         }
 
         #region 公有变量
@@ -43,6 +50,18 @@ namespace StayAwayGameScript
         /// 灵魂死亡
         /// </summary>
         public Boolean SoulIsDead;
+        /// <summary>
+        /// 当前拥有的魔法
+        /// </summary>
+        public StayAwayGame.Magic CurrentMagic;
+        /// <summary>
+        /// 剩余魔法量
+        /// </summary>
+        public int MagicLeft;
+        /// <summary>
+        /// 下一关名字
+        /// </summary>
+        public string NextLevelName = "level_end";
 
 
         [Header("对象")]
@@ -62,6 +81,10 @@ namespace StayAwayGameScript
         /// 主渲染
         /// </summary>
         public UnityEngine.Object GlobalVolume;
+        /// <summary>
+        /// UI界面
+        /// </summary>
+        public GameObject UI;
 
         [Header("参数")]
         /// <summary>
@@ -152,6 +175,12 @@ namespace StayAwayGameScript
         /// </summary>
         public UnityEngine.Object Light;
 
+        [Header("魔法")]
+        /// <summary>
+        /// 魔法使用次数
+        /// </summary>
+        public int MagicUsageCount = 5;
+
         #endregion
 
         #region 私有变量
@@ -211,6 +240,14 @@ namespace StayAwayGameScript
         /// 显示灯
         /// </summary>
         private Boolean _displayedLight;
+        /// <summary>
+        /// 锁住控制器
+        /// </summary>
+        private Boolean _isControllerLocked;
+        /// <summary>
+        /// 游戏结束原因
+        /// </summary>
+        private int _gameOverReason;
 
         #endregion
 
@@ -254,12 +291,12 @@ namespace StayAwayGameScript
                 DisplayLight(!this._displayedLight);
             }
 
-            if (!this.SoulIsDead)
+            if (!(this.SoulIsDead || this.PonyIsDead || this._isControllerLocked))
             {
                 CalcDistance();
                 CalcControl();
+                CalcMagic();
             }
-            CalcItem();
         }
 
         /// <summary>
@@ -267,8 +304,12 @@ namespace StayAwayGameScript
         /// </summary>
         void GatherInput()
         {
-            this.input.ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R);
-            this.input.DisplayLight = UnityEngine.Input.GetKeyDown(KeyCode.L);
+            this.input = new FrameInput
+            {
+                ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R),
+                DisplayLight = UnityEngine.Input.GetKeyDown(KeyCode.L),
+                UseMagic = UnityEngine.Input.GetKeyDown(KeyCode.E)
+            };
         }
 
         /// <summary>
@@ -284,7 +325,7 @@ namespace StayAwayGameScript
                 if (this._tooCloseDeadRatio >= 1)
                 {
                     // 小马死亡
-                    CharacterDead(true);
+                    CharacterDead(true, 1);
                     return;
                 }
                 else
@@ -331,7 +372,7 @@ namespace StayAwayGameScript
                 if (this._tooFarDeadRatio >= 1)
                 {
                     // 灵魂死亡
-                    CharacterDead(false);
+                    CharacterDead(false, 2);
                     return;
                 }
                 else
@@ -409,36 +450,46 @@ namespace StayAwayGameScript
         {
             if (this.input.ChangeCharacter)
             {
-                if (this._currentCharacter)
-                {
-                    this.Pony.GetComponent<PonyController>().EnableControl = false;
-                    this.Soul.GetComponent<SoulController>().EnableControl = true;
-                    this.Soul.GetComponent<SoulController>().SetAIEnable(false);
-                    this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
-                    this.Soul.GetComponentInChildren<SpriteRenderer>().color = Color.white;
-                    this._volumeCAJ.hueShift.SetValue(new FloatParameter(180));
-                    this._currentCharacter = false;
-
-                }
-                else
-                {
-                    this.Pony.GetComponent<PonyController>().EnableControl = true;
-                    this.Soul.GetComponent<SoulController>().EnableControl = false;
-                    this.Soul.GetComponent<SoulController>().SetAIEnable(! this.SoulIsDead && this.HasLight && this._displayedLight);
-                    this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
-                    Color c = Color.white;
-                    c.a = this.SoulPellucidity;
-                    this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
-                    this._volumeCAJ.hueShift.SetValue(new FloatParameter(0));
-                    this._currentCharacter = true;
-                }
+                ChangeCharacter(!this._currentCharacter);
             }
         }
 
-        // 计算物品
-        void CalcItem()
+        void ChangeCharacter(Boolean flag)
         {
+            if (!flag)
+            {
+                this.Pony.GetComponent<PonyController>().EnableControl = false;
+                this.Soul.GetComponent<SoulController>().EnableControl = true;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(false);
+                this.MainCamera.GetComponent<CameraController>().SetTarget(this.Soul);
+                this.Soul.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+                this._volumeCAJ.hueShift.SetValue(new FloatParameter(180));
+                this._currentCharacter = false;
 
+            }
+            else
+            {
+                this.Pony.GetComponent<PonyController>().EnableControl = true;
+                this.Soul.GetComponent<SoulController>().EnableControl = false;
+                this.Soul.GetComponent<SoulController>().SetAIEnable(!this.SoulIsDead && this.HasLight && this._displayedLight);
+                this.MainCamera.GetComponent<CameraController>().SetTarget(this.Pony);
+                Color c = Color.white;
+                c.a = this.SoulPellucidity;
+                this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+                this._volumeCAJ.hueShift.SetValue(new FloatParameter(0));
+                this._currentCharacter = true;
+            }
+        }
+
+        // 计算魔法
+        void CalcMagic()
+        {
+            if(this.input.UseMagic && this.HasLyra && this.CurrentMagic!=StayAwayGame.Magic.None && this.MagicLeft > 0)
+            {
+                this.MagicLeft--;
+                this.UI.GetComponent<UIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
+                this.Soul.GetComponent<MagicEmitter>().EmitMagic(this.CurrentMagic);
+            }
         }
 
         /// <summary>
@@ -461,7 +512,7 @@ namespace StayAwayGameScript
             }
         }
 
-        void CharacterDead(Boolean character)
+        public void CharacterDead(Boolean character, int reason)
         {
             // 清除特效
             this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
@@ -489,6 +540,7 @@ namespace StayAwayGameScript
                 c.a = this.SoulPellucidity;
                 this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
                 this._currentCharacter = true;
+
             }
             else
             {
@@ -505,7 +557,12 @@ namespace StayAwayGameScript
                 this._currentCharacter = true;
 
                 this._volumeVGN.intensity.SetValue(new FloatParameter(0));
+
+                this.Soul.GetComponent<SoulController>().Dead();
+
             }
+
+            GameOver(reason);
         }
 
         public void GetItem(StayAwayGame.Item item)
@@ -513,11 +570,100 @@ namespace StayAwayGameScript
             if(item == StayAwayGame.Item.ItemLyra)
             {
                 this.HasLyra = true;
+                this.UI.GetComponent<UIScript>().GetLyra(true);
+
             }
             else if(item == StayAwayGame.Item.ItemLight)
             {
                 this.HasLight = true;
+                this.UI.GetComponent<UIScript>().GetLight(true);
             }
         }
+
+        public void GetMagic(StayAwayGame.Magic magic)
+        {
+            this.CurrentMagic = magic;
+            this.MagicLeft = this.MagicUsageCount;
+            this.UI.GetComponent<UIScript>().GetMagic(magic);
+            this.UI.GetComponent<UIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
+        }
+
+        public void SetControllerLock(Boolean flag = false)
+        {
+            this._isControllerLocked = flag;
+            this.Pony.GetComponent<PonyController>().EnableControl = false;
+            this.Soul.GetComponent<SoulController>().EnableControl = false;
+            if (!flag)
+            {
+                ChangeCharacter(this._currentCharacter);
+            }
+        }
+
+        #region 游戏结束
+
+        /// <summary>
+        /// 游戏结束
+        /// </summary>
+        /// <param name="reason">0 成功 1 小马死 2 姐姐死</param>
+        public void GameOver(int reason)
+        {
+            SetControllerLock(true);
+            this._gameOverReason = reason;
+            Invoke(nameof(GameOver_P0), 2);
+        }
+
+        public void GameOver_P0()
+        {
+            this.UI.GetComponent<UIScript>().PlayCurtain(true);
+            Invoke(nameof(GameOver_P1), 1.5f);
+        }
+
+        void GameOver_P1()
+        {
+            if (this.UI.GetComponent<UIScript>().IsPlaying)
+            {
+                Invoke(nameof(GameOver_P1), 1.5f);
+                return;
+            }
+
+            // 清除特效
+            this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
+            this._volumeCHA.intensity.SetValue(new FloatParameter(0));
+            this._volumeBM.intensity.SetValue(new FloatParameter(0));
+            this._volumeCAJ.hueShift.SetValue(new FloatParameter(0));
+            // 清除环
+            this._distanceCircleScript.SetColor(Color.clear);
+            this._distanceCircleScript.DrawCircle();
+            this._distanceCircleScript.Enable = false;
+
+            if (this._gameOverReason == 0)
+            {
+                this.UI.GetComponent<UIScript>().PlayText("游戏结束");
+                Invoke(nameof(GameOver_P2), 5f);
+            }
+            else if (this._gameOverReason == 1)
+            {
+                this.UI.GetComponent<UIScript>().PlayText("你被幻觉击晕了");
+                Invoke(nameof(GameOver_P2), 5f);
+            }
+            else if (this._gameOverReason == 2)
+            {
+                this.UI.GetComponent<UIScript>().PlayText("姐姐的灵魂消散了\n没有她的保护，你在森林里将寸步难行");
+                Invoke(nameof(GameOver_P2), 5f);
+            }
+            else if (this._gameOverReason == 3)
+            {
+                this.UI.GetComponent<UIScript>().PlayText("你死了");
+                Invoke(nameof(GameOver_P2), 5f);
+            }
+
+        }
+
+        void GameOver_P2()
+        {
+            SceneManager.LoadScene(this.NextLevelName);
+        }
+
+        #endregion
     }
 }

@@ -14,6 +14,7 @@ namespace StayAwayGameScript
 
         public Boolean EnableAI = true;
 
+        public float DeadTime = 1f;
 
         [Header("AI寻路")]
         /// <summary>
@@ -53,6 +54,8 @@ namespace StayAwayGameScript
         /// 当前导航点
         /// </summary>
         private int _AICurrentWayPoint = 0;
+        private float _deadTimeLeft;
+        private Boolean _isDying = false;
 
         void Start()
         {
@@ -63,27 +66,43 @@ namespace StayAwayGameScript
             this._rigid.freezeRotation = true;
         }
 
-
         #region AI寻路
-
         private void Update()
         {
-            var targetDist = Vector2.Distance(this.transform.position, this.Target.GetComponent<Transform>().position);
-            if(!this.EnableAI && targetDist <= this.TrackingDistance)
+            if (_isDying)
             {
-                SetAIEnable(true);
+                this._deadTimeLeft -= Time.deltaTime;
+                if (this._deadTimeLeft < 0)
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+                Color c = Color.white;
+                c.a = this._deadTimeLeft / this.DeadTime;
+                this.GetComponent<SpriteRenderer>().color = c;
             }
-            else if (this.EnableAI && targetDist > this.TrackingDistance)
+            else
             {
-                SetAIEnable(false);
-            }
-            if(this._rigid.velocity.x > 0)
-            {
-                this._renderer.flipX = true;
-            }
-            else if (this._rigid.velocity.x < 0)
-            {
-                this._renderer.flipX = false;
+                var targetDist = Vector2.Distance(this.transform.position, this.Target.GetComponent<Transform>().position);
+                if (!this.EnableAI && targetDist <= this.TrackingDistance)
+                {
+                    SetAIEnable(true);
+                }
+                else if (this.EnableAI && targetDist > this.TrackingDistance)
+                {
+                    SetAIEnable(false);
+                }
+                if (this.EnableAI)
+                {
+                    if (this._rigid.velocity.x > 0)
+                    {
+                        this._renderer.flipX = true;
+                    }
+                    else if (this._rigid.velocity.x < 0)
+                    {
+                        this._renderer.flipX = false;
+                    }
+                }
             }
         }
 
@@ -97,7 +116,7 @@ namespace StayAwayGameScript
             {
                 // 启动AI
                 this.EnableAI = true;
-                InvokeRepeating("AIUpdatePath", 0f, this.AIUpdatePathInterval);
+                InvokeRepeating(nameof(AIUpdatePath), 0f, this.AIUpdatePathInterval);
             }
             else
             {
@@ -151,10 +170,9 @@ namespace StayAwayGameScript
                     return;
                 }
 
-                // 计算方向
+                // 加力
                 Vector2 dir = ((Vector2)this._AIPath.vectorPath[this._AICurrentWayPoint] - (Vector2)this.transform.position).normalized;
-                Vector2 force = dir * this.Speed * Time.deltaTime;
-
+                Vector2 force = this.Speed * Time.deltaTime * dir;
                 this._rigid.AddForce(force);
 
 
@@ -168,7 +186,26 @@ namespace StayAwayGameScript
                 }
             }
         }
-
         #endregion
+
+        public void Dead()
+        {
+            this.EnableAI = false;
+            this.SetAIEnable(false);
+            this._rigid.velocity = Vector2.zero;
+            this._deadTimeLeft = this.DeadTime;
+            this._isDying = true;
+
+            Destroy(this.GetComponent<CircleCollider2D>());
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("Pony"))
+            {
+                Dead();
+                other.GetComponent<GameLogic>().CharacterDead(true, 3);
+            }
+        }
     }
 }

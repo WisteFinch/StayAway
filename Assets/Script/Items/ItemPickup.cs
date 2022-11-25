@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using StayAwayGameScript;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
 
 namespace StayAwayGameScript

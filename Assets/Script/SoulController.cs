@@ -52,6 +52,10 @@ namespace StayAwayGameScript
         /// 小马对象
         /// </summary>
         public UnityEngine.Object Pony;
+        /// <summary>
+        /// 死亡动画时间
+        /// </summary>
+        public float DeadTime = 1f;
 
         [Header("AI寻路")]
         /// <summary>
@@ -144,6 +148,19 @@ namespace StayAwayGameScript
         /// 上一帧位置
         /// </summary>
         private Vector2 _lastPosition;
+        /// <summary>
+        /// 死亡动画剩余时间
+        /// </summary>
+        private float _deadTimeLeft;
+        /// <summary>
+        /// 是否已死亡
+        /// </summary>
+        private Boolean _isDying = false;
+        /// <summary>
+        /// 不透明度
+        /// </summary>
+        private float _pellucidity;
+
         #endregion
 
         #region AI寻路
@@ -188,6 +205,8 @@ namespace StayAwayGameScript
 
             // 初始化AI
             this._AISeeker = this.GetComponent<Seeker>();
+
+            this._pellucidity = this.Pony.GetComponent<GameLogic>().SoulPellucidity;
         }
 
         void Update()
@@ -196,8 +215,24 @@ namespace StayAwayGameScript
             this.RelativeVelocity = (this._rigidbody.position - _lastPosition) / Time.deltaTime;
             this._lastPosition = this._rigidbody.position;
 
-            // 获取输入
-            GatherInput();
+            if (_isDying)
+            {
+                this._deadTimeLeft -= Time.deltaTime;
+                if (this._deadTimeLeft < 0)
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+                Color c = Color.white;
+                c.a = Mathf.Lerp(0, this._pellucidity, this._deadTimeLeft / this.DeadTime);
+                this.GetComponentInChildren<SpriteRenderer>().color = c;
+            } else
+            {
+
+                // 获取输入
+                GatherInput();
+            }
+
             // 计算行走
             CalcWalk();
             // 综合数据，计算位移
@@ -413,7 +448,7 @@ namespace StayAwayGameScript
             {
                 // 启动AI
                 this.EnableAI = true;
-                InvokeRepeating("AIUpdatePath", 0f, this.AIUpdatePathInterval);
+                InvokeRepeating(nameof(AIUpdatePath), 0f, this.AIUpdatePathInterval);
             }
             else
             {
@@ -484,6 +519,14 @@ namespace StayAwayGameScript
         }
 
         #endregion
+
+        public void Dead()
+        {
+            this.EnableAI = false;
+            this.SetAIEnable(false);
+            this._deadTimeLeft = this.DeadTime;
+            this._isDying = true;
+        }
     }
 
 }
