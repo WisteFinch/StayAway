@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7283651530330497997
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 672808308311841522}
+  - component: {fileID: 2184051985533928093}
+  - component: {fileID: 6162495462779524441}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &672808308311841522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283651530330497997}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.08828887, y: 1.1499851, z: 75.47045}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2184051985533928093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283651530330497997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbd267934b9b9fe478d2b1e9a2922910, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Skins: {fileID: 6162495462779524441}
+--- !u!114 &6162495462779524441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7283651530330497997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c016f3abaf099ce49899b5d93bbab528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Animators:
+  - {fileID: 9100000, guid: 1013079a9ed0f2842b3a867cc13d91bf, type: 2}
+  - {fileID: 22100000, guid: bdc6e558e57f7de44b8185ee0f26fb41, type: 2}
+  - {fileID: 22100000, guid: 44856b592023ac9429031d158693f152, type: 2}
+  - {fileID: 22100000, guid: 5d8538f348a5c4d49bd8ba14b39b49bb, type: 2}
+  - {fileID: 22100000, guid: 478ce7f01fb2cb24ba5b5677dbc9efce, type: 2}
+  Idles:
+  - {fileID: -864988007, guid: 820609b819324ff43b25c65a1b6d1794, type: 3}
+  - {fileID: -1183387229, guid: 3df137121cb6d83429f726a7e903f5f9, type: 3}
+  - {fileID: -333950254, guid: 7da11acd372fe3a4ea6632e90e2fb079, type: 3}
+  - {fileID: 1702098909, guid: 249dd725bc05a8b44b3783945c0f5701, type: 3}
+  - {fileID: 1560912874, guid: 613f26ebabc3fcc4c8def6080c8b231c, type: 3}

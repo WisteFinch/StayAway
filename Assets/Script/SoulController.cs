@@ -528,5 +528,4 @@ namespace StayAwayGameScript
             this._isDying = true;
         }
     }
-
 }

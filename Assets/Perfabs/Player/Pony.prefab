@@ -286,7 +286,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_Sprite: {fileID: -864988007, guid: 820609b819324ff43b25c65a1b6d1794, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -445,12 +445,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HasLight: 0
+  HasLyra: 0
   PonyIsDead: 0
   SoulIsDead: 0
+  CurrentMagic: 0
+  MagicLeft: 0
+  NextLevelName: level_end
   Pony: {fileID: 1907533329401665013}
   Soul: {fileID: 0}
   MainCamera: {fileID: 0}
   GlobalVolume: {fileID: 0}
+  UI: {fileID: 0}
   MinimalPonyToSoulDistance: 1
   MaximalPonyToSoulDistance: 5
   TooCloseDeadTime: 2
@@ -474,6 +479,7 @@ MonoBehaviour:
   SoulLightColorStart: {r: 0, g: 0.32168436, b: 1, a: 1}
   SoulLightColorEnd: {r: 0.3244037, g: 0.50802267, b: 0.8490566, a: 1}
   Light: {fileID: 520186835980122752}
+  MagicUsageCount: 5
 --- !u!1 &5824793825091847464
 GameObject:
   m_ObjectHideFlags: 0
