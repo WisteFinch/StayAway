@@ -62,6 +62,10 @@ namespace StayAwayGameScript
         /// 下一关名字
         /// </summary>
         public string NextLevelName = "level_end";
+        /// <summary>
+        /// 允许特效
+        /// </summary>
+        Boolean EnableEffect = true;
 
 
         [Header("对象")]
@@ -276,10 +280,13 @@ namespace StayAwayGameScript
 
             this.Light.GameObject().SetActive(false);
 
+            this.EnableEffect = true;
+
             // Debug
             Color c = Color.white;
             c.a = this.SoulPellucidity;
             this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
+
         }
 
         void Update()
@@ -344,27 +351,35 @@ namespace StayAwayGameScript
                     this._tooCloseDeadRatio = 0;
                 }
             }
-            if (_currentCharacter)
+            if (this.EnableEffect)
             {
-                this._volumeVGN.intensity.SetValue(new FloatParameter(Mathf.Clamp(this._tooCloseDeadRatio * this.BlackoutWeight, 0, 1f)));
-            }
-            else
-            {
-                this._volumeVGN.intensity.SetValue(new FloatParameter(0));
-            }
-
-            // 小马视角：小马离灵魂近，显示幻觉
-            if (this._currentCharacter)
-            {
-                if (this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.IllusionDistance)
+                if (_currentCharacter)
                 {
-                    this._volumeCHA.intensity.SetValue(new FloatParameter(Mathf.Clamp((this.MinimalPonyToSoulDistance + this.IllusionDistance - this._ponyToSoulDistance) * this.IllusionWeight / this.IllusionDistance, 0, 1f)));
+                    this._volumeVGN.intensity.SetValue(new FloatParameter(Mathf.Clamp(this._tooCloseDeadRatio * this.BlackoutWeight, 0, 1f)));
+                }
+                else
+                {
+                    this._volumeVGN.intensity.SetValue(new FloatParameter(0));
                 }
             }
-            else
+
+
+            // 小马视角：小马离灵魂近，显示幻觉
+            if (this.EnableEffect)
             {
-                this._volumeCHA.intensity.SetValue(new FloatParameter(0));
+                if (this._currentCharacter)
+                {
+                    if (this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.IllusionDistance)
+                    {
+                        this._volumeCHA.intensity.SetValue(new FloatParameter(Mathf.Clamp((this.MinimalPonyToSoulDistance + this.IllusionDistance - this._ponyToSoulDistance) * this.IllusionWeight / this.IllusionDistance, 0, 1f)));
+                    }
+                }
+                else
+                {
+                    this._volumeCHA.intensity.SetValue(new FloatParameter(0));
+                }
             }
+            
 
             // 灵魂视角：小马离灵魂远近，消逝
             if (this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance)
@@ -391,55 +406,63 @@ namespace StayAwayGameScript
                     this._tooFarDeadRatio = 0;
                 }
             }
-            if (!_currentCharacter)
+            if(this.EnableEffect)
             {
-                this._volumeBM.intensity.SetValue(new FloatParameter(Mathf.Clamp(this._tooFarDeadRatio * this.VanishWeight * 100, 0, 100f)));
-            }
-            else
-            {
-                this._volumeBM.intensity.SetValue(new FloatParameter(0));
+                if (!_currentCharacter)
+                {
+                    this._volumeBM.intensity.SetValue(new FloatParameter(Mathf.Clamp(this._tooFarDeadRatio * this.VanishWeight * 100, 0, 100f)));
+                }
+                else
+                {
+                    this._volumeBM.intensity.SetValue(new FloatParameter(0));
+                }
             }
 
             // 灵魂视角：小马离灵魂太远，褪色
-            if (!this._currentCharacter)
+            if(this.EnableEffect)
             {
-                if (this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance - this.FadingDistance)
+                if (!this._currentCharacter)
                 {
-                    this._volumeCAJ.saturation.SetValue(new FloatParameter(Mathf.Clamp((this._ponyToSoulDistance - this.MaximalPonyToSoulDistance + this.FadingDistance) * this.FadingWeight * -100 / this.FadingDistance, -100f, 0)));
+                    if (this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance - this.FadingDistance)
+                    {
+                        this._volumeCAJ.saturation.SetValue(new FloatParameter(Mathf.Clamp((this._ponyToSoulDistance - this.MaximalPonyToSoulDistance + this.FadingDistance) * this.FadingWeight * -100 / this.FadingDistance, -100f, 0)));
+                    }
                 }
-            }
-            else
-            {
-                this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
+                else
+                {
+                    this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
+                }
             }
 
 
             // 计算距离环
-            if (this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance)
+            if (this.EnableEffect) 
             {
-                this._distanceCircleScript.Enable = true;
-                this._distanceCircleScript.R = this.MinimalPonyToSoulDistance;
-                var pell = Mathf.Clamp((this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance - this._ponyToSoulDistance) / this.DistanceCircleDisplayDistance * this.DistanceCirclePellucidity, 0, this.DistanceCirclePellucidity);
-                var c = this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance ? this.DistanceCircleDangerColor : this.DistanceCircleDefaultColor;
-                c.a = pell;
-                this._distanceCircleScript.SetColor(c);
+                if (this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance)
+                {
+                    this._distanceCircleScript.Enable = true;
+                    this._distanceCircleScript.R = this.MinimalPonyToSoulDistance;
+                    var pell = Mathf.Clamp((this.MinimalPonyToSoulDistance + this.DistanceCircleDisplayDistance - this._ponyToSoulDistance) / this.DistanceCircleDisplayDistance * this.DistanceCirclePellucidity, 0, this.DistanceCirclePellucidity);
+                    var c = this._ponyToSoulDistance <= this.MinimalPonyToSoulDistance ? this.DistanceCircleDangerColor : this.DistanceCircleDefaultColor;
+                    c.a = pell;
+                    this._distanceCircleScript.SetColor(c);
+                }
+                else if (this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance - this.DistanceCircleDisplayDistance)
+                {
+                    this._distanceCircleScript.Enable = true;
+                    this._distanceCircleScript.R = this.MaximalPonyToSoulDistance;
+                    var pell = Mathf.Clamp((this._ponyToSoulDistance - this.MaximalPonyToSoulDistance + this.DistanceCircleDisplayDistance) / this.DistanceCircleDisplayDistance * this.DistanceCirclePellucidity, 0, this.DistanceCirclePellucidity);
+                    var c = this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance ? this.DistanceCircleDangerColor : this.DistanceCircleDefaultColor;
+                    c.a = pell;
+                    this._distanceCircleScript.SetColor(c);
+                }
+                else
+                {
+                    this._distanceCircleScript.SetColor(Color.clear);
+                    this._distanceCircleScript.DrawCircle();
+                    this._distanceCircleScript.Enable = false;
+                }
             }
-            else if (this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance - this.DistanceCircleDisplayDistance)
-            {
-                this._distanceCircleScript.Enable = true;
-                this._distanceCircleScript.R = this.MaximalPonyToSoulDistance;
-                var pell = Mathf.Clamp((this._ponyToSoulDistance - this.MaximalPonyToSoulDistance + this.DistanceCircleDisplayDistance) / this.DistanceCircleDisplayDistance * this.DistanceCirclePellucidity, 0, this.DistanceCirclePellucidity);
-                var c = this._ponyToSoulDistance >= this.MaximalPonyToSoulDistance ? this.DistanceCircleDangerColor : this.DistanceCircleDefaultColor;
-                c.a = pell;
-                this._distanceCircleScript.SetColor(c);
-            }
-            else
-            {
-                this._distanceCircleScript.SetColor(Color.clear);
-                this._distanceCircleScript.DrawCircle();
-                this._distanceCircleScript.Enable = false;
-            }
-
         }
 
 
@@ -487,7 +510,7 @@ namespace StayAwayGameScript
             if(this.input.UseMagic && this.HasLyra && this.CurrentMagic!=StayAwayGame.Magic.None && this.MagicLeft > 0)
             {
                 this.MagicLeft--;
-                this.UI.GetComponent<UIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
+                this.UI.GetComponent<GUIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
                 this.Soul.GetComponent<MagicEmitter>().EmitMagic(this.CurrentMagic);
             }
         }
@@ -570,13 +593,13 @@ namespace StayAwayGameScript
             if(item == StayAwayGame.Item.ItemLyra)
             {
                 this.HasLyra = true;
-                this.UI.GetComponent<UIScript>().GetLyra(true);
+                this.UI.GetComponent<GUIScript>().GetLyra(true);
 
             }
             else if(item == StayAwayGame.Item.ItemLight)
             {
                 this.HasLight = true;
-                this.UI.GetComponent<UIScript>().GetLight(true);
+                this.UI.GetComponent<GUIScript>().GetLight(true);
             }
         }
 
@@ -584,8 +607,8 @@ namespace StayAwayGameScript
         {
             this.CurrentMagic = magic;
             this.MagicLeft = this.MagicUsageCount;
-            this.UI.GetComponent<UIScript>().GetMagic(magic);
-            this.UI.GetComponent<UIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
+            this.UI.GetComponent<GUIScript>().GetMagic(magic);
+            this.UI.GetComponent<GUIScript>().SetMagicCount(this.MagicLeft, this.MagicUsageCount);
         }
 
         public void SetControllerLock(Boolean flag = false)
@@ -609,24 +632,35 @@ namespace StayAwayGameScript
         {
             SetControllerLock(true);
             this._gameOverReason = reason;
-            Invoke(nameof(GameOver_P0), 2);
-        }
 
-        public void GameOver_P0()
-        {
-            this.UI.GetComponent<UIScript>().PlayCurtain(true);
-            Invoke(nameof(GameOver_P1), 1.5f);
-        }
+            this.UI.GetComponent<GUIScript>().AnimationDoneEvent.AddListener(GameOverDone);
+            this.UI.GetComponent<GUIScript>().AnimationDoneStepEvent.AddListener(GameOverClearEffect);
 
-        void GameOver_P1()
-        {
-            if (this.UI.GetComponent<UIScript>().IsPlaying)
+            if (this._gameOverReason == 0)
             {
-                Invoke(nameof(GameOver_P1), 1.5f);
-                return;
+                this.UI.GetComponent<GUIScript>().PlayText("游戏结束");
             }
+            else if (this._gameOverReason == 1)
+            {
+                this.UI.GetComponent<GUIScript>().PlayText("你被幻觉击晕了");
+            }
+            else if (this._gameOverReason == 2)
+            {
+                this.UI.GetComponent<GUIScript>().PlayText("姐姐的灵魂消散了\n没有她的保护，你在森林里将寸步难行");
+            }
+            else if (this._gameOverReason == 3)
+            {
+                this.UI.GetComponent<GUIScript>().PlayText("你死了");
+            }
+        }
+
+        public void GameOverClearEffect()
+        {
+            this.UI.GetComponent<GUIScript>().AnimationDoneStepEvent.RemoveListener(GameOverClearEffect);
+            this.EnableEffect = false;
 
             // 清除特效
+            this._volumeVGN.intensity.SetValue(new FloatParameter(0));
             this._volumeCAJ.saturation.SetValue(new FloatParameter(0));
             this._volumeCHA.intensity.SetValue(new FloatParameter(0));
             this._volumeBM.intensity.SetValue(new FloatParameter(0));
@@ -635,32 +669,11 @@ namespace StayAwayGameScript
             this._distanceCircleScript.SetColor(Color.clear);
             this._distanceCircleScript.DrawCircle();
             this._distanceCircleScript.Enable = false;
-
-            if (this._gameOverReason == 0)
-            {
-                this.UI.GetComponent<UIScript>().PlayText("游戏结束");
-                Invoke(nameof(GameOver_P2), 5f);
-            }
-            else if (this._gameOverReason == 1)
-            {
-                this.UI.GetComponent<UIScript>().PlayText("你被幻觉击晕了");
-                Invoke(nameof(GameOver_P2), 5f);
-            }
-            else if (this._gameOverReason == 2)
-            {
-                this.UI.GetComponent<UIScript>().PlayText("姐姐的灵魂消散了\n没有她的保护，你在森林里将寸步难行");
-                Invoke(nameof(GameOver_P2), 5f);
-            }
-            else if (this._gameOverReason == 3)
-            {
-                this.UI.GetComponent<UIScript>().PlayText("你死了");
-                Invoke(nameof(GameOver_P2), 5f);
-            }
-
         }
 
-        void GameOver_P2()
+        public void GameOverDone()
         {
+            this.UI.GetComponent<GUIScript>().AnimationDoneEvent.RemoveListener(GameOverDone);
             SceneManager.LoadScene(this.NextLevelName);
         }
 
