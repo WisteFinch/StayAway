@@ -40,6 +40,11 @@ namespace StayAwayGameScript
         public float DisappearTime = 1;
 
         /// <summary>
+        /// 爆炸效果预制体
+        /// </summary>
+        public GameObject Boom;
+
+        /// <summary>
         /// 开始追踪
         /// </summary>
         private Boolean _trackingStarted;
@@ -67,7 +72,7 @@ namespace StayAwayGameScript
                     other.GetComponent<EnemyController>().Dead();
                     Disappear();
                 }
-                else if (!(other.gameObject.CompareTag("Pony") || other.gameObject.CompareTag("Soul")))
+                else if (other.gameObject.CompareTag("Ground"))
                 {
                     Disappear();
                 }
@@ -152,6 +157,8 @@ namespace StayAwayGameScript
 
         public void Disappear()
         {
+            var boom = Instantiate(this.Boom);
+            boom.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
             this._disappearing = true;
             var list = this.GetComponentsInChildren<ParticleSystem>();
             foreach(ParticleSystem p in list)

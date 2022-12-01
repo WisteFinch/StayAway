@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - Magic
   - Audio
+  - Ground
   layers:
   - Default
   - TransparentFX

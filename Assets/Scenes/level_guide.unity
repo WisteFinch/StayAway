@@ -202,7 +202,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8785281962974802792, guid: d920532d67621924dba1e2f65119cef4, type: 3}
       propertyPath: m_Text
-      value: "\u65C5\u7A0B\u544A\u4E00\u6BB5\u843D"
+      value: "\u65C5\u7A0B\u544A\u4E00\u6BB5\u843D\n\u2192"
       objectReference: {fileID: 0}
     - target: {fileID: 8785281962974802794, guid: d920532d67621924dba1e2f65119cef4, type: 3}
       propertyPath: m_Name
@@ -214,11 +214,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8785281962974802795, guid: d920532d67621924dba1e2f65119cef4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 25.297
+      value: 23.284
       objectReference: {fileID: 0}
     - target: {fileID: 8785281962974802795, guid: d920532d67621924dba1e2f65119cef4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.185
+      value: -3.119
       objectReference: {fileID: 0}
     - target: {fileID: 8785281962974802795, guid: d920532d67621924dba1e2f65119cef4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -851,6 +851,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a1cb3d6f25822f4887eedfa421a1a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Camera: {fileID: 519420028}
+  CameraTrackingRatioBeginModify: 0.25
+  CameraTrackingRatioBeginModifyTime: 3
 --- !u!1 &488291748
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,8 +978,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Obj: {fileID: 138718964}
-  TrackingRatio: 0.05
+  TrackingRatio: 20
   TrackingThreshold: 0.1
+  CameraSize: 5
+  ResizeRatio: 2
   BackGround: {fileID: 1076360013}
   BackGroundOffsetRatio: 0.05
 --- !u!20 &519420035
@@ -1396,22 +1401,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6509422917062338535, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
   m_PrefabInstance: {fileID: 6509422917209612774}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &962151944
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 962151937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5491611aee3a1fc41a926e3ab3525a0f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  AngleDetection: 30
-  SpawnDistance: 0
-  MaxDistance: 10
-  MagicWaterBall: {fileID: 3139979490520914962, guid: 74f1f13f43a9fbd40a11b2c22df3a49e, type: 3}
 --- !u!4 &967125923 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8785281962974802795, guid: d920532d67621924dba1e2f65119cef4, type: 3}
@@ -1881,6 +1870,10 @@ PrefabInstance:
       propertyPath: GlideGravityDeaccelerationRatio
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 4303082971858576242, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
+      propertyPath: m_Volume
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5824793825091847464, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: m_Layer
       value: 6
@@ -1898,10 +1891,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 962151937}
     - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: CameraSize
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: MainCamera
       value: 
       objectReference: {fileID: 519420035}
@@ -1910,8 +1899,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1714574758}
     - target: {fileID: 7704078001692515450, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
-      propertyPath: SoulPellucidity
-      value: 0.4
+      propertyPath: NextLevelName
+      value: level_01
       objectReference: {fileID: 0}
     - target: {fileID: 7751207658942663748, guid: 2e673a50fefa55947b12e18eb241a7ca, type: 3}
       propertyPath: m_SortingOrder
@@ -3049,6 +3038,10 @@ PrefabInstance:
     - target: {fileID: 3513534555578658115, guid: 6abd26301388282469df6d7f34b7273f, type: 3}
       propertyPath: m_Offset.y
       value: 6.309474
+      objectReference: {fileID: 0}
+    - target: {fileID: 3513534555578658170, guid: 6abd26301388282469df6d7f34b7273f, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     - target: {fileID: 3513534556145613248, guid: 6abd26301388282469df6d7f34b7273f, type: 3}
       propertyPath: m_Size.x
@@ -10247,21 +10240,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6299744345293571040, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6509422916987116840, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
       propertyPath: m_Layer
       value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6509422916987116841, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.11
-      objectReference: {fileID: 0}
-    - target: {fileID: 6509422916987116841, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.23
-      objectReference: {fileID: 0}
-    - target: {fileID: 6509422916987116854, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
-      propertyPath: m_SortingOrder
-      value: 97
       objectReference: {fileID: 0}
     - target: {fileID: 6509422916987116855, guid: 21cdbfb57d9119449a2dc43949f63b93, type: 3}
       propertyPath: m_Controller

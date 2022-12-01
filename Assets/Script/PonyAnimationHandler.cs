@@ -73,5 +73,15 @@ namespace StayAwayGameScript
             this._animator.SetBool("IsTroting", this._controller.Velocity.x != 0);
             this._animator.SetBool("IsFlying", this._controller.IsGliding);
         }
+
+        public void Nod()
+        {
+            this._animator.SetTrigger("Nod");
+        }
+
+        public void ShakeHead()
+        {
+            this._animator.SetTrigger("ShakeHead");
+        }
     }
 }

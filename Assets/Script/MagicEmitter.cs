@@ -14,6 +14,8 @@ namespace StayAwayGameScript
         public float SpawnDistance = 0f;
         public float MaxDistance = 10f;
 
+        public AudioClip EmitAudio;
+
         [Header("Ô¤ÖÆÌå")]
         public GameObject MagicWaterBall;
 
@@ -69,6 +71,8 @@ namespace StayAwayGameScript
                     magicInstance.GetComponent<MagicController>().StartTracking(mouseVector, (Vector2)this.transform.position + mouseVector * this.SpawnDistance);
                 }
             }
+            this.GetComponentInChildren<AudioSource>().clip = this.EmitAudio;
+            this.GetComponentInChildren<AudioSource>().Play();   
         }
     }
 }

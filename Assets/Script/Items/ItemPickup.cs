@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace StayAwayGameScript
 {
-    [RequireComponent(typeof(CircleCollider2D))]
     public class ItemPickup : MonoBehaviour
     {
         public StayAwayGame.Item ItemType;
@@ -22,9 +21,24 @@ namespace StayAwayGameScript
 
             if (other.gameObject.CompareTag(this.TargetName))
             {
-                other.GetComponent<GameLogic>().GetItem(this.ItemType);
-                Destroy(this.gameObject);
+                other.GetComponent<GameLogic>().GetItem(this.ItemType, this.gameObject);
+                Destroy(this.GetComponent<CircleCollider2D>());
+                var list = this.gameObject.GetComponentsInChildren<ParticleSystem>();
+                foreach (ParticleSystem p in list)
+                {
+                    p.Stop();
+                }    
             }
+        }
+
+        public void DestryThisLater(float time)
+        {
+            Invoke(nameof(DestroyThis), time);
+        }
+
+        public void DestroyThis()
+        {
+            Destroy(this.gameObject);
         }
     }
 }

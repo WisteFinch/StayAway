@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -7,7 +8,15 @@ namespace StayAwayGameScript
 {
     public class WaterFallScript : MonoBehaviour
     {
-        public float DestroyTime = 10f;
+        public float DestroyTime = 4f;
+
+        private AudioSource _audio;
+        private Boolean _isDisappearing = false;
+
+        private void Start()
+        {
+            this._audio = this.GetComponentInChildren<AudioSource>();
+        }
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if(collision.gameObject.CompareTag("Soul"))
@@ -26,6 +35,15 @@ namespace StayAwayGameScript
                 }
                 Destroy(this.GetComponent<BoxCollider2D>());
                 Invoke(nameof(DestroySelf), this.DestroyTime);
+                this._isDisappearing = true;
+            }
+        }
+
+        private void Update()
+        {
+            if(this._isDisappearing)
+            {
+                this._audio.volume = Mathf.MoveTowards(this._audio.volume, 0, Time.deltaTime / this.DestroyTime);
             }
         }
 

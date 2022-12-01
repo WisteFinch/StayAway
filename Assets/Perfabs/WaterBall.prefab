@@ -231,6 +231,9 @@ MonoBehaviour:
   EnableStartForce: 1
   StartForceRatio: 50
   MissOutDestructDistance: 2
+  MaxDistance: 10
+  DisappearTime: 1
+  Boom: {fileID: 6327787771704284101, guid: a3f859d6f8d12724d9653b5848de2286, type: 3}
 --- !u!1 &3139979490679962076
 GameObject:
   m_ObjectHideFlags: 0
