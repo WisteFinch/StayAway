@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Enemy
   - Magic
+  - Audio
   layers:
   - Default
   - TransparentFX

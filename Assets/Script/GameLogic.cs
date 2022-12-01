@@ -197,6 +197,10 @@ namespace StayAwayGameScript
         /// </summary>
         private Transform _ponyTransform;
         /// <summary>
+        /// 小马音频组件
+        /// </summary>
+        private AudioPlayer _ponyAudio;
+        /// <summary>
         /// 灵魂变形器
         /// </summary>
         private Transform _soulTransform;
@@ -267,6 +271,8 @@ namespace StayAwayGameScript
             this._volume.profile.TryGet<Bloom>(out this._volumeBM);
             this._distanceCircleScript = this.GetComponentInChildren<CircleRender>();
 
+            this._ponyAudio = this.Pony.GetComponentInChildren<AudioPlayer>();
+
             // 初始化
             this.MainCamera.GetComponent<Camera>().orthographicSize = this.CameraSize;
             this._currentCharacter = true;
@@ -333,11 +339,13 @@ namespace StayAwayGameScript
                 {
                     // 小马死亡
                     CharacterDead(true, 1);
+                    this._ponyAudio.SetPitchOffset();
                     return;
                 }
                 else
                 {
                     this._tooCloseDeadRatio += Time.deltaTime / this.TooCloseDeadTime;
+                    
                 }
             }
             else
@@ -351,6 +359,7 @@ namespace StayAwayGameScript
                     this._tooCloseDeadRatio = 0;
                 }
             }
+            SetAudioPitch(1 - this._tooCloseDeadRatio);
             if (this.EnableEffect)
             {
                 if (_currentCharacter)
@@ -465,6 +474,14 @@ namespace StayAwayGameScript
             }
         }
 
+        void SetAudioPitch(float pitch)
+        {
+            var list = GameObject.FindGameObjectsWithTag("Audio");
+            foreach (var item in list)
+            {
+                item.GetComponent<AudioSource>().pitch = pitch;
+            }
+        }
 
         /// <summary>
         /// 计算控制

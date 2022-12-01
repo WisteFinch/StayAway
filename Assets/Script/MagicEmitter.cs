@@ -50,16 +50,23 @@ namespace StayAwayGameScript
                     }
                 }
             }
-            
-            // 发射魔法
-            if(target != null)
-            {
-                GameObject instance;
 
+            // 发射魔法
+            GameObject magicInstance;
+            if (target != null)
+            {
                 if(magic == StayAwayGame.Magic.MagicWaterBall)
                 {
-                    instance = Instantiate(this.MagicWaterBall);
-                    instance.GetComponent<MagicController>().StartTracking(target, (Vector2)this.transform.position + mouseVector * this.SpawnDistance, mouseVector);
+                    magicInstance = Instantiate(this.MagicWaterBall);
+                    magicInstance.GetComponent<MagicController>().StartTracking(target, (Vector2)this.transform.position + mouseVector * this.SpawnDistance, mouseVector);
+                }
+            }
+            else
+            {
+                if (magic == StayAwayGame.Magic.MagicWaterBall)
+                {
+                    magicInstance = Instantiate(this.MagicWaterBall);
+                    magicInstance.GetComponent<MagicController>().StartTracking(mouseVector, (Vector2)this.transform.position + mouseVector * this.SpawnDistance);
                 }
             }
         }
