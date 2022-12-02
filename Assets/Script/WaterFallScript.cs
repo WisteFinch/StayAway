@@ -9,6 +9,7 @@ namespace StayAwayGameScript
     public class WaterFallScript : MonoBehaviour
     {
         public float DestroyTime = 4f;
+        public Boolean EnableGather = false;
 
         private AudioSource _audio;
         private Boolean _isDisappearing = false;
@@ -19,11 +20,11 @@ namespace StayAwayGameScript
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            if(collision.gameObject.CompareTag("Soul"))
+            if (collision.gameObject.CompareTag("Soul"))
             {
                 collision.GetComponent<SoulController>().Pony.GetComponent<GameLogic>().CharacterDead(false, 2);
             }
-            else if(collision.gameObject.CompareTag("Pony"))
+            else if(collision.gameObject.CompareTag("Pony") && this.EnableGather)
             {
                 collision.GetComponent<GameLogic>().GetMagic(StayAwayGame.Magic.MagicWaterBall);
                 var list = this.GetComponentsInChildren<ParticleSystem>();

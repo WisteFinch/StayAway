@@ -418,7 +418,7 @@ MonoBehaviour:
   JumpEndEarlyGravityCoefficient: 3
   DashSpeedRatio: 3
   GlideSpeedRatio: 0.1
-  GlideGravityDeaccelerationRatio: 0.025
+  GlideGravityDeaccelerationRatio: 0.05
   DashDeacceleration: 12
   JumpVelocity: 5
   JumpApexThreshold: 2

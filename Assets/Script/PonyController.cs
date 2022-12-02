@@ -42,6 +42,10 @@ namespace StayAwayGameScript
         /// </summary>
         public Boolean EnableControl;
         /// <summary>
+        /// 启用冻结
+        /// </summary>
+        public Boolean EnableForzen;
+        /// <summary>
         /// 速度
         /// </summary>
         public Vector2 Velocity;
@@ -302,7 +306,7 @@ namespace StayAwayGameScript
             // 计算相对速度
             this.RelativeVelocity = (this._rigidbody.position - _lastPosition) / Time.deltaTime;
             this._lastPosition = this._rigidbody.position;
-            
+
             // 获取输入
             GatherInput();
             // 计算行走
@@ -313,8 +317,12 @@ namespace StayAwayGameScript
             CalcGravity();
             // 计算跳跃
             CalcJump();
-            // 综合数据，计算位移
-            CalcMove();
+
+            if (!this.EnableForzen)
+            {
+                // 综合数据，计算位移
+                CalcMove();
+            }
         }
 
         private void OnValidate()

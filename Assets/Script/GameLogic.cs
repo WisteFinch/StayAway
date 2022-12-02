@@ -8,6 +8,7 @@ using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -213,6 +214,9 @@ namespace StayAwayGameScript
         /// </summary>
         public float GetMagicCameraResize = -1;
 
+        [Header("事件")]
+        public UnityEvent<int> GameOverEvent = new();
+
         #endregion
 
         #region 私有变量
@@ -315,9 +319,6 @@ namespace StayAwayGameScript
             this.Light.GameObject().SetActive(false);
 
             this.EnableEffect = true;
-
-            // 设置控制
-            ChangeCharacter(true);
         }
 
         void Update()
@@ -514,7 +515,7 @@ namespace StayAwayGameScript
         /// 切换角色
         /// </summary>
         /// <param name="flag"></param>
-        void ChangeCharacter(Boolean flag)
+        public void ChangeCharacter(Boolean flag)
         {
             if (flag)
             {
@@ -574,6 +575,11 @@ namespace StayAwayGameScript
             }
         }
 
+        public void PonyDead()
+        {
+            CharacterDead(true, 3);
+        }
+
         public void CharacterDead(Boolean character, int reason)
         {
             // 清除特效
@@ -593,7 +599,9 @@ namespace StayAwayGameScript
 
             }
             SetControllerLock(true);
-            GameOver(reason);
+            SetForzen(true);
+
+            this.GameOverEvent.Invoke(reason);
         }
 
         /// <summary>
@@ -675,6 +683,12 @@ namespace StayAwayGameScript
             {
                 ChangeCharacter(this._currentCharacter);
             }
+        }
+
+        public void SetForzen(Boolean flag)
+        {
+            this.Pony.GetComponent<PonyController>().EnableForzen = flag;
+            this.Soul.GetComponent<SoulController>().EnableForzen = flag;
         }
 
         /// <summary>

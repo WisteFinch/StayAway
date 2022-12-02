@@ -29,6 +29,10 @@ namespace StayAwayGameScript
         /// </summary>
         public Boolean EnableControl;
         /// <summary>
+        /// 启用冻结
+        /// </summary>
+        public Boolean EnableForzen;
+        /// <summary>
         /// 启用AI
         /// </summary>
         public Boolean EnableAI;
@@ -211,22 +215,24 @@ namespace StayAwayGameScript
 
         void Update()
         {
+
             // 计算相对速度
             this.RelativeVelocity = (this._rigidbody.position - _lastPosition) / Time.deltaTime;
             this._lastPosition = this._rigidbody.position;
 
             if (_isDying)
             {
-                this._deadTimeLeft -= Time.deltaTime;
+                this._deadTimeLeft -= Time.deltaTime / 2;
                 if (this._deadTimeLeft < 0)
                 {
-                    Destroy(this.gameObject);
+                    this.EnableForzen = true;
                     return;
                 }
                 Color c = Color.white;
                 c.a = Mathf.Lerp(0, this._pellucidity, this._deadTimeLeft / this.DeadTime);
                 this.GetComponentInChildren<SpriteRenderer>().color = c;
-            } else
+            }
+            else
             {
 
                 // 获取输入
@@ -235,8 +241,11 @@ namespace StayAwayGameScript
 
             // 计算行走
             CalcWalk();
-            // 综合数据，计算位移
-            CalcMove();
+            if (!this.EnableForzen)
+            {
+                // 综合数据，计算位移
+                CalcMove();
+            }
         }
 
         private void OnValidate()
@@ -461,7 +470,7 @@ namespace StayAwayGameScript
         {
             if (this._AISeeker.IsDone())
             {
-                this._AISeeker.StartPath(this.transform.position, this.Pony.GetComponent<Transform>().position, AIOnPathComplete);
+                this._AISeeker.StartPath(this.transform.position, this.Pony.GetComponent<Transform>().position + Vector3.up, AIOnPathComplete);
             }
         }
 
