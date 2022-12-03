@@ -151,7 +151,7 @@ npc：“哦哦哦，（名字）啊，让她去吧，希望她能有所收获�
 
 美术&策划：DuNεCK
 
-美术&策划：Jocy
+美术：PromeJocy
 
 特别鸣谢：FloatingLight233、PonyTown、坎特伯雷公主与骑士唤醒冠军之剑的奇幻冒险
 
