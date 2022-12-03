@@ -18,14 +18,13 @@ namespace StayAwayGameLevelScript
         private GameLogic GameLogicScript;
         void Start()
         {
+            
             this.GameLogicScript = this.Pony.GetComponent<GameLogic>();
             this._oriCameraTrackingRatio = Camera.GetComponent<CameraController>().TrackingRatio;
             Camera.GetComponent<CameraController>().TrackingRatio *= this.CameraTrackingRatioBeginModify;
             Invoke(nameof(RestoreCameraTrackingRatio), this.CameraTrackingRatioBeginModifyTime);
 
             this.GameLogicScript.GameOverEvent.AddListener(GameOver);
-
-            this.GameLogicScript.ChangeCharacter(true);
 
             GameManager.Instance.InitPlayer();
         }

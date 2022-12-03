@@ -37,11 +37,11 @@ namespace StayAwayGameScript
 
         void Update()
         {
-            if (this._controller.Velocity.x > 0)
+            if (this._controller.RelativeVelocity.x > 0)
             {
                 this.IsFlip = true;
             }
-            else if (this._controller.Velocity.x < 0)
+            else if (this._controller.RelativeVelocity.x < 0)
             {
                 this.IsFlip = false;
             }

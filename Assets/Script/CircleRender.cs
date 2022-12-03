@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace StayAwayGameScript
 {
+    [RequireComponent(typeof(LineRenderer))]
     public class CircleRender : MonoBehaviour
     {
         /// <summary>
@@ -44,6 +45,15 @@ namespace StayAwayGameScript
                 DrawCircle();
             }
         }
+
+        void OnValidate()
+        {
+            if (this.Enable)
+            {
+                DrawCircle();
+            }
+        }
+
         public void DrawCircle()
         {
             for (int i = 0; i < this.AngleCount; i++)

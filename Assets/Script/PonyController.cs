@@ -569,9 +569,9 @@ namespace StayAwayGameScript
             {
                 this._lastUseDashTime = Time.time;
                 // 计算冲刺速度
-                if(this.Velocity.x > 0)
+                if(this.Input.XAxis > 0)
                     this.Velocity.x += this.MaxVelocity.x * this.DashSpeedRatio;
-                else if(this.Velocity.x < 0)
+                else if(this.Input.XAxis < 0)
                     this.Velocity.x -= this.MaxVelocity.x * this.DashSpeedRatio;
             }
             if (this.Input.XAxis != 0)

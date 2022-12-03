@@ -64,20 +64,28 @@ namespace StayAwayGameScript
         /// </summary>
         public string NextLevelName = "level_end";
         /// <summary>
+        /// 下一关名字
+        /// </summary>
+        public string ThisLevelName = "level_end";
+        /// <summary>
         /// 允许特效
         /// </summary>
-        Boolean EnableEffect = true;
+        public Boolean EnableEffect = true;
+        /// <summary>
+        /// 允许换角色
+        /// </summary>
+        public Boolean EnableChangeCharacter = true;
 
 
         [Header("对象")]
         /// <summary>
         /// 小马对象
         /// </summary>
-        public UnityEngine.Object Pony;
+        public GameObject Pony;
         /// <summary>
         /// 灵魂对象
         /// </summary>
-        public UnityEngine.Object Soul;
+        public GameObject Soul;
         /// <summary>
         /// 主摄像机
         /// </summary>
@@ -345,7 +353,7 @@ namespace StayAwayGameScript
         {
             this.input = new FrameInput
             {
-                ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R),
+                ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R) && this.EnableChangeCharacter,
                 DisplayLight = UnityEngine.Input.GetKeyDown(KeyCode.L),
                 UseMagic = UnityEngine.Input.GetKeyDown(KeyCode.E)
             };
@@ -695,7 +703,7 @@ namespace StayAwayGameScript
         /// 设置音高
         /// </summary>
         /// <param name="pitch"></param>
-        void SetAudioPitch(float pitch)
+        public void SetAudioPitch(float pitch)
         {
             var list = GameObject.FindGameObjectsWithTag("Audio");
             foreach (var item in list)
@@ -737,7 +745,7 @@ namespace StayAwayGameScript
 
             if (this._gameOverReason == 0)
             {
-                this.UI.GetComponent<GUIScript>().PlayText("游戏结束");
+                this.UI.GetComponent<GUIScript>().PlayCurtain(true);
             }
             else if (this._gameOverReason == 1)
             {
@@ -751,6 +759,10 @@ namespace StayAwayGameScript
             {
                 this.UI.GetComponent<GUIScript>().PlayText("你死了");
             }
+            else if (this._gameOverReason == 4)
+            {
+                this.UI.GetComponent<GUIScript>().PlayText("未完待续···");
+            }
         }
 
         public void GameOverClearEffect()
@@ -763,8 +775,16 @@ namespace StayAwayGameScript
 
         public void GameOverDone()
         {
-            this.UI.GetComponent<GUIScript>().AnimationDoneEvent.RemoveListener(GameOverDone);
-            SceneManager.LoadScene(this.NextLevelName);
+            if(this._gameOverReason == 0 || this._gameOverReason == 4)
+            {
+                this.UI.GetComponent<GUIScript>().AnimationDoneEvent.RemoveListener(GameOverDone);
+                SceneManager.LoadScene(this.NextLevelName);
+            }
+            else
+            {
+                this.UI.GetComponent<GUIScript>().AnimationDoneEvent.RemoveListener(GameOverDone);
+                SceneManager.LoadScene(this.ThisLevelName);
+            }
         }
 
         #endregion

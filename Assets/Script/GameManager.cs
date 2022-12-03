@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace StayAwayGameScript
 {
@@ -51,9 +52,9 @@ namespace StayAwayGameScript
         /// </summary>
         /// <param name="i">¥Êµµ–Ú∫≈</param>
         /// <returns></returns>
-        public PlayerDataSystem.PlayerData.DataStruct GetPlayerData(int index)
+        public PlayerDataSystem.PlayerData.DataStruct GetPlayerData(int index = -1)
         {
-            return this.PlayerSystem.GetPlayerData(index);
+            return index == -1 ? this.PlayerSystem.GetPlayerData(this._currentPlayerIndex) : this.PlayerSystem.GetPlayerData(index);
         }
 
         /// <summary>
@@ -70,9 +71,12 @@ namespace StayAwayGameScript
         /// </summary>
         /// <param name="data"></param>
         /// <param name="index"></param>
-        public void SetPlayerData(PlayerDataSystem.PlayerData.DataStruct data, int index)
+        public void SetPlayerData(PlayerDataSystem.PlayerData.DataStruct data, int index = -1)
         {
-            this.PlayerSystem.SetPlayerData(data, index);
+            if(index == -1)
+                this.PlayerSystem.SetPlayerData(data, this._currentPlayerIndex);
+            else
+                this.PlayerSystem.SetPlayerData(data, index);
         }
 
         /// <summary>
@@ -88,8 +92,22 @@ namespace StayAwayGameScript
         /// </summary>
         public void InitPlayer()
         {
+            print(_currentPlayerIndex);
             // …Ë÷√–°¬Ì∆§∑Ù
             GameObject.FindGameObjectWithTag("Pony").GetComponentInChildren<Animator>().runtimeAnimatorController = this.Skins.GetAnimator(this.PlayerSystem.GetPlayerData(this._currentPlayerIndex).Skin);
+        }
+
+        public void LoadLevel(int l = -1)
+        {
+            var p = l == -1 ? this.PlayerSystem.GetPlayerData(this._currentPlayerIndex).Progress : l;
+            if (p == 0)
+                SceneManager.LoadScene("level_guide");
+            else if(p == 1)
+                SceneManager.LoadScene("level_01");
+            else if(p == 2)
+                SceneManager.LoadScene("level_end");
+            else
+                SceneManager.LoadScene("level_guide");
         }
     }
 }

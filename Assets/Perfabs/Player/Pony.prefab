@@ -400,6 +400,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableControl: 0
+  EnableForzen: 0
   Velocity: {x: 0, y: 0}
   RelativeVelocity: {x: 0, y: 0}
   IsJumping: 0
@@ -418,7 +419,7 @@ MonoBehaviour:
   JumpEndEarlyGravityCoefficient: 3
   DashSpeedRatio: 3
   GlideSpeedRatio: 0.1
-  GlideGravityDeaccelerationRatio: 0.05
+  GlideGravityDeaccelerationRatio: 0.1
   DashDeacceleration: 12
   JumpVelocity: 5
   JumpApexThreshold: 2
@@ -476,6 +477,9 @@ MonoBehaviour:
   CurrentMagic: 0
   MagicLeft: 0
   NextLevelName: level_end
+  ThisLevelName: level_end
+  EnableEffect: 1
+  EnableChangeCharacter: 1
   Pony: {fileID: 1907533329401665013}
   Soul: {fileID: 0}
   MainCamera: {fileID: 0}
@@ -512,6 +516,9 @@ MonoBehaviour:
   GetMagicTime: 2
   GetMagicOffset: {x: 0, y: 0.5}
   GetMagicCameraResize: -1
+  GameOverEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &5824793825091847464
 GameObject:
   m_ObjectHideFlags: 0
@@ -585,7 +592,7 @@ LineRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 103
   m_Positions:
   - {x: 0, y: 0, z: 0}
   - {x: 0, y: 0, z: 1}
@@ -684,7 +691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9183480769129531048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -703,7 +710,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -747,7 +754,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0

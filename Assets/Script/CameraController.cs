@@ -17,7 +17,7 @@ namespace StayAwayGameScript
         /// <summary>
         /// ×·×Ù¶ÔÏó
         /// </summary>
-        public UnityEngine.Object Obj;
+        public GameObject Obj;
         /// <summary>
         /// ×·×ÙÂÊ
         /// </summary>
@@ -105,7 +105,7 @@ namespace StayAwayGameScript
             }
         }
 
-        public void SetTarget(UnityEngine.Object target)
+        public void SetTarget(GameObject target)
         {
             this.Obj = target;
             this._targetTransform = this.Obj.GetComponent<Transform>();

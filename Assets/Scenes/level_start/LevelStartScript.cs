@@ -186,7 +186,7 @@ namespace StayAwayGameLevelScript
             GameManager.Instance.SetPlayerIndex(this._currentPlayerIndex);
             GameManager.Instance.SetPlayerData(this._currentPlayerSave, _currentPlayerIndex);
             GameManager.Instance.PlayerSystem.SavePlayerData();
-            SceneManager.LoadScene("level_guide");
+            GameManager.Instance.LoadLevel();
         }
 
         public void GameExit()
