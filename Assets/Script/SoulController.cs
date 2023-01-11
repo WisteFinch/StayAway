@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Pathfinding;
@@ -263,8 +262,8 @@ namespace StayAwayGameScript
             {
                 this.Input = new FrameInput
                 {
-                    XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
-                    YAxis = UnityEngine.Input.GetAxisRaw("Vertical")
+                    XAxis = GameManager.Instance.Input.MoveAxis.x,
+                    YAxis = GameManager.Instance.Input.MoveAxis.y
                 };
             }
             else if(this.EnableAI)

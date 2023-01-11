@@ -340,11 +340,11 @@ namespace StayAwayGameScript
             {
                 this.Input = new FrameInput
                 {
-                    XAxis = UnityEngine.Input.GetAxisRaw("Horizontal"),
-                    JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
-                    JumpPressed = UnityEngine.Input.GetButton("Jump"),
-                    JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
-                    ShiftDown = UnityEngine.Input.GetKeyDown(KeyCode.LeftShift),
+                    XAxis = GameManager.Instance.Input.MoveAxis.x,
+                    JumpDown = GameManager.Instance.Input.JumpKeyDown,
+                    JumpPressed = GameManager.Instance.Input.JumpKeyPressed,
+                    JumpUp = GameManager.Instance.Input.JumpKeyUp,
+                    ShiftDown = GameManager.Instance.Input.DashKeyDown,
                 };
                 if (this.Input.JumpDown)
                 {

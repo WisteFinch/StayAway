@@ -23945,7 +23945,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -23965,7 +23965,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -24020,7 +24020,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 2
-      m_TileSpriteIndex: 16
+      m_TileSpriteIndex: 21
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -24480,7 +24480,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 13
-      m_TileSpriteIndex: 13
+      m_TileSpriteIndex: 20
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -26590,7 +26590,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 16
-      m_TileSpriteIndex: 11
+      m_TileSpriteIndex: 16
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -27830,7 +27830,7 @@ Tilemap:
     second:
       serializedVersion: 2
       m_TileIndex: 12
-      m_TileSpriteIndex: 12
+      m_TileSpriteIndex: 13
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -28083,28 +28083,28 @@ Tilemap:
     m_Data: {fileID: -1805906424, guid: d66c4a4fac47bfc43aa88c9471378901, type: 3}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 1
-    m_Data: {fileID: -997420662, guid: 94dc3d9d94de3854fad280040a65c46a, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   - m_RefCount: 1
     m_Data: {fileID: 2134256713, guid: f7c9fa011f7ac0f459f37291dd63e926, type: 3}
-  - m_RefCount: 1
-    m_Data: {fileID: 1032993860, guid: 0c50e92bd370d3c4d9768c5e6a504f5f, type: 3}
   - m_RefCount: 29
     m_Data: {fileID: 1409418576, guid: 0625224e60a469f4fb62a1721e9a774a, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: 1807213896, guid: cca4266c3b177854f85a99a42b0344b7, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 1111488351, guid: 296ddf4fe082e444297853280c99aa0a, type: 3}
+    m_Data: {fileID: -997420662, guid: 94dc3d9d94de3854fad280040a65c46a, type: 3}
   - m_RefCount: 7
     m_Data: {fileID: -141595258, guid: f169faa9f8d7e9440ab8cf3de5d5fccf, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -1080838327, guid: ffbd65d55d92ede439575d9065a72ff2, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -653549606, guid: 65eb13e0306eb144684351ef1979440a, type: 3}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 1032993860, guid: 0c50e92bd370d3c4d9768c5e6a504f5f, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 1111488351, guid: 296ddf4fe082e444297853280c99aa0a, type: 3}
   - m_RefCount: 1
     m_Data: {fileID: -1262532029, guid: 35bc5d0259b34c84ab6c1e6d1f875548, type: 3}
   - m_RefCount: 2
@@ -28189,7 +28189,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28209,7 +28209,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: -1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -28727,7 +28727,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -28747,7 +28747,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16

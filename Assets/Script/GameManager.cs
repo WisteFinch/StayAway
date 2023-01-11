@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,6 +25,11 @@ namespace StayAwayGameScript
         public SkinSystem Skins;
 
         /// <summary>
+        /// 输入管理
+        /// </summary>
+        public InputManager Input;
+
+        /// <summary>
         /// 当前玩家序号
         /// </summary>
         private int _currentPlayerIndex;
@@ -45,6 +48,8 @@ namespace StayAwayGameScript
                 return;
             }
             this.PlayerSystem.LoadPlayerData();
+
+            this.Input = this.gameObject.GetComponent<InputManager>();
         }
 
         /// <summary>

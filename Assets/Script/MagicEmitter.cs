@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace StayAwayGameScript
 {
@@ -24,7 +19,7 @@ namespace StayAwayGameScript
             // 获取鼠标在相机中（世界中）的位置，转换为屏幕坐标；
             var screenPosition = Camera.main.WorldToScreenPoint(this.transform.position);
             // 获取鼠标在场景中坐标
-            var mousePositionOnScreen = UnityEngine.Input.mousePosition;
+            Vector3 mousePositionOnScreen = GameManager.Instance.Input.MousePosition;
             // 让场景中的Z=鼠标坐标的Z
             mousePositionOnScreen.z = screenPosition.z;
             // 将相机中的坐标转化为世界坐标，再转化为相对自己的单位向量

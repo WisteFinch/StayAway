@@ -65,7 +65,7 @@ namespace StayAwayGameLevelScript
             this.Soul.transform.position = -this.Pony.transform.position + (Vector3)this.SoulOffset;
             if(this._enableSkip)
             {
-                if(UnityEngine.Input.GetKeyDown(KeyCode.E))
+                if(GameManager.Instance.Input.InteractKeyDown)
                 {
                     DisableSkip();
                 }

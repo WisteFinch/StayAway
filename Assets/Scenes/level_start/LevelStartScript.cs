@@ -1,10 +1,8 @@
 using StayAwayGameScript;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 namespace StayAwayGameLevelScript
 {
@@ -29,6 +27,7 @@ namespace StayAwayGameLevelScript
 
         PlayerDataSystem.PlayerData.DataStruct _currentPlayerSave;
         int _currentPlayerIndex;
+        Vector2 _mouseFluentPos;
 
         private void Start()
         {
@@ -39,12 +38,13 @@ namespace StayAwayGameLevelScript
             this._UISBCloudPosOri = UISBCloud.transform.position;
             this._UISFCloudPosOri = UISFCloud.transform.position;
             this._enableOffset = true;
+
+            Vector2 screenSize = new(UnityEngine.Screen.width, UnityEngine.Screen.height);
+            this._mouseFluentPos = new(screenSize.x/2, 0);
         }
 
         void Update()
         {
-
-
             if (this._enableOffset)
             {
                 UpdateOffset();
@@ -149,8 +149,9 @@ namespace StayAwayGameLevelScript
         {
             Vector2 screenSize = new(UnityEngine.Screen.width, UnityEngine.Screen.height);
             Vector2 centre = screenSize / 2f;
-            Vector2 mousePos = new(Mathf.Clamp(UnityEngine.Input.mousePosition.x, 0, screenSize.x), Mathf.Clamp(UnityEngine.Input.mousePosition.y, 0, screenSize.y));
-            Vector2 mouseOffset = (mousePos - centre) / centre;
+            Vector2 mousePos = new(Mathf.Clamp(Mouse.current.position.ReadValue().x, 0, screenSize.x), Mathf.Clamp(Mouse.current.position.ReadValue().y, 0, screenSize.y));
+            this._mouseFluentPos = Vector2.MoveTowards(this._mouseFluentPos, mousePos, 10);
+            Vector2 mouseOffset = (this._mouseFluentPos - centre) / centre;
             UIFCloud.transform.position = this._UIFCloudPosOri + (Vector3)(0.05f * this.OffsetRatio * mouseOffset * screenSize);
             UIBCloud.transform.position = this._UIBCloudPosOri + (Vector3)(0.03f * this.OffsetRatio * mouseOffset * screenSize);
             UISky.transform.position = this._UISkyPosOri + (Vector3)(0.01f * this.OffsetRatio * mouseOffset * screenSize);

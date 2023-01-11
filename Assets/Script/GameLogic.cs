@@ -1,12 +1,5 @@
-using StayAwayGameScript;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using Unity.Collections;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering;
@@ -327,6 +320,10 @@ namespace StayAwayGameScript
             this.Light.GameObject().SetActive(false);
 
             this.EnableEffect = true;
+
+            Color c = Color.white;
+            c.a = this.SoulPellucidity;
+            this.Soul.GetComponentInChildren<SpriteRenderer>().color = c;
         }
 
         void Update()
@@ -353,9 +350,9 @@ namespace StayAwayGameScript
         {
             this.input = new FrameInput
             {
-                ChangeCharacter = UnityEngine.Input.GetKeyDown(KeyCode.R) && this.EnableChangeCharacter,
-                DisplayLight = UnityEngine.Input.GetKeyDown(KeyCode.L),
-                UseMagic = UnityEngine.Input.GetKeyDown(KeyCode.E)
+                ChangeCharacter = GameManager.Instance.Input.ChangeCharacterKeyDown && this.EnableChangeCharacter,
+                DisplayLight = GameManager.Instance.Input.LightKeyDown,
+                UseMagic = GameManager.Instance.Input.FireKeyDown
             };
         }
 
@@ -393,7 +390,7 @@ namespace StayAwayGameScript
                     this._tooCloseDeadRatio = 0;
                 }
             }
-            SetAudioPitch(1 - this._tooCloseDeadRatio); // 调整音高
+            SetAudioPitch(this._currentCharacter ? 1 - this._tooCloseDeadRatio : 1); // 调整音高
             if (this.EnableEffect)
             {
                 if (_currentCharacter)
