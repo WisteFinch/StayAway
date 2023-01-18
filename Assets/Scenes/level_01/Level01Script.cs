@@ -57,6 +57,9 @@ namespace StayAwayGameLevelScript
             GameManager.Instance.SetPlayerData(d);
 
             GameManager.Instance.InitPlayer();
+
+            GameManager.Instance.SetGUI(this.GUI);
+
             MaskController(-1);
         }
 

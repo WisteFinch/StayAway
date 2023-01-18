@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 namespace StayAwayGameLevelEnd
 {
@@ -9,7 +7,7 @@ namespace StayAwayGameLevelEnd
     {
         void Update()
         {
-            if (UnityEngine.Input.anyKeyDown)
+            if (Keyboard.current.anyKey.isPressed)
             {
 
                 #if UNITY_EDITOR

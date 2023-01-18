@@ -34,6 +34,11 @@ namespace StayAwayGameScript
         /// </summary>
         private int _currentPlayerIndex;
 
+        /// <summary>
+        /// 当前GUI
+        /// </summary>
+        private GameObject _gui;
+
         private void Awake()
         {
             // 创建单例
@@ -97,7 +102,7 @@ namespace StayAwayGameScript
         /// </summary>
         public void InitPlayer()
         {
-            print(_currentPlayerIndex);
+            print($"Current Skin Index: {this._currentPlayerIndex}");
             // 设置小马皮肤
             GameObject.FindGameObjectWithTag("Pony").GetComponentInChildren<Animator>().runtimeAnimatorController = this.Skins.GetAnimator(this.PlayerSystem.GetPlayerData(this._currentPlayerIndex).Skin);
         }
@@ -113,6 +118,22 @@ namespace StayAwayGameScript
                 SceneManager.LoadScene("level_end");
             else
                 SceneManager.LoadScene("level_guide");
+        }
+
+        public void SetGUI(GameObject obj)
+        {
+            this._gui = obj;
+        }
+
+        public void AddTips(string str, bool urgent = false)
+        {
+            if(this._gui != null)
+            {
+                if (urgent)
+                    this._gui.GetComponent<GUIScript>().TipsList.Insert(this._gui.GetComponent<GUIScript>().TipsList.Count == 0 ? 0 : 1, str);
+                else
+                    this._gui.GetComponent<GUIScript>().TipsList.Add(str);
+            }
         }
     }
 }

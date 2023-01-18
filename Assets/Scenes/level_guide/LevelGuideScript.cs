@@ -10,6 +10,7 @@ namespace StayAwayGameLevelScript
 
         public GameObject Camera;
         public GameObject Pony;
+        public GameObject GUI;
         public float CameraTrackingRatioBeginModify = 0.25f;
         public float CameraTrackingRatioBeginModifyTime = 3;
 
@@ -27,6 +28,8 @@ namespace StayAwayGameLevelScript
             this.GameLogicScript.GameOverEvent.AddListener(GameOver);
 
             GameManager.Instance.InitPlayer();
+
+            GameManager.Instance.SetGUI(this.GUI);
         }
 
         void RestoreCameraTrackingRatio()

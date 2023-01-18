@@ -578,6 +578,7 @@ namespace StayAwayGameScript
                 this.Soul.GetComponent<SoulController>().SetAIEnable(false);
                 this.Light.GameObject().SetActive(false);
             }
+            this.UI.GetComponent<GUIScript>().SetLightStatus(this._displayedLight);
         }
 
         public void PonyDead()
@@ -625,13 +626,13 @@ namespace StayAwayGameScript
             if (item == StayAwayGame.Item.ItemLyra)
             {
                 this.HasLyra = true;
-                this.UI.GetComponent<GUIScript>().GetLyra(true);
+                this.UI.GetComponent<GUIScript>().SetItemUsable(StayAwayGame.Item.ItemLyra, true);
 
             }
             else if(item == StayAwayGame.Item.ItemLight)
             {
                 this.HasLight = true;
-                this.UI.GetComponent<GUIScript>().GetLight(true);
+                this.UI.GetComponent<GUIScript>().SetItemUsable(StayAwayGame.Item.ItemLight, true);
             }
 
             itemObj.GetComponent<ItemPickup>().DestryThisLater(this.PickupItemTime);

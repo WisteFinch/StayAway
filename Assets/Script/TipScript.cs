@@ -2,37 +2,60 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TipScript : MonoBehaviour
+namespace StayAwayGameScript
 {
-    public GameObject TargetObj;
-    public Color TxtColor = Color.white;
-    public float DisplayDistance = 1;
-    public float GradientDistance = 1;
-
-    private TextMesh _txt;
-
-    private void Start()
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class TipScript : MonoBehaviour
     {
-        this._txt = this.GetComponent<TextMesh>();
-        this._txt.color = Color.clear;
-    }
-    void Update()
-    {
-        float distance = Vector2.Distance(this.TargetObj.transform.position, this.transform.position);
-        if(distance >= this.DisplayDistance + this.GradientDistance)
+        public GameObject TargetObj;
+        public bool UseGUI = true;
+        public bool Urgent = false;
+        public Color TxtColor = Color.white;
+        public float DisplayDistance = 1;
+        public float GradientDistance = 1;
+
+        private TextMesh _txt;
+
+        private void Start()
         {
+            this._txt = this.GetComponent<TextMesh>();
             this._txt.color = Color.clear;
-            return;
+
         }
-        if(distance <= this.DisplayDistance)
+        void Update()
         {
-            this._txt.color = this.TxtColor;
+            if (!this.UseGUI)
+            {
+                float distance = Vector2.Distance(this.TargetObj.transform.position, this.transform.position);
+                if (distance >= this.DisplayDistance + this.GradientDistance)
+                {
+                    this._txt.color = Color.clear;
+                    return;
+                }
+                if (distance <= this.DisplayDistance)
+                {
+                    this._txt.color = this.TxtColor;
+                }
+                else
+                {
+                    Color c = this.TxtColor;
+                    c.a = 1f - (distance - this.DisplayDistance) / this.GradientDistance;
+                    this._txt.color = c;
+                }
+            }
+            else
+            {
+                this._txt.color = Color.clear;
+            }
         }
-        else
+
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            Color c = this.TxtColor;
-            c.a =  1f - (distance - this.DisplayDistance) / this.GradientDistance;
-            this._txt.color = c;
+            if (this.UseGUI && collision.gameObject == this.TargetObj)
+            {
+                GameManager.Instance.AddTips(this._txt.text, this.Urgent);
+                Destroy(this.gameObject);
+            }
         }
     }
 }
