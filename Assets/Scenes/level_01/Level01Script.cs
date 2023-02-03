@@ -46,19 +46,21 @@ namespace StayAwayGameLevelScript
             this.GameLogicScript = this.Pony.GetComponent<GameLogic>();
             this.CrystalCircle = this.Crystal.GetComponent<CircleRender>();
             this.Soul.GetComponent<SoulController>().EnableForzen = true;
-            this.GameLogicScript.GameOverEvent.AddListener(GameOver);
+            this.GameLogicScript.FlowGameOverEvent.AddListener(GameOver);
             Invoke(nameof(BeginAnimationP1), 1f);
             Invoke(nameof(SetControlLock), 0.1f);
 
             this.CrystalCircle.Enable = false;
 
-            var d = GameManager.Instance.GetPlayerData();
-            d.Progress = 1;
-            GameManager.Instance.SetPlayerData(d);
+            var d = GameManager.Instance.GetSavesData();
+            d.Level = StayAwayGame.Level.Level01;
+            GameManager.Instance.SetSavesData(d);
 
             GameManager.Instance.InitPlayer();
 
             GameManager.Instance.SetGUI(this.GUI);
+
+            GameManager.Instance.SetLogic(this.GameLogicScript);
 
             MaskController(-1);
         }
@@ -139,7 +141,7 @@ namespace StayAwayGameLevelScript
         public void CloseDoor()
         {
             this._closeDoorTime = 0;
-            this.GameLogicScript.EnableChangeCharacter = false;
+            this.GameLogicScript.CHAREnableChangeCharacter = false;
             this.GameLogicScript.ChangeCharacter(true);
             this.GameLogicScript.SetControllerLock(true);
             this.Door.GetComponentInChildren<AudioSource>().Play();
@@ -153,7 +155,7 @@ namespace StayAwayGameLevelScript
             this.Camera.GetComponent<CameraController>().Resize(5);
             this.CrystalCircle.Enable = true;
             this._cryCirclePushAwayUsability = true;
-            this.GameLogicScript.EnableEffect = false;
+            this.GameLogicScript.RenderEnableEffect = false;
             this._enableCircle = true;
             this.Crystal.GetComponentInChildren<AudioSource>().Play();
         }
@@ -234,7 +236,7 @@ namespace StayAwayGameLevelScript
         #region ½áÊø¶¯»­
         void GameOver(int flag)
         {
-            this.GameLogicScript.GameOverEvent.RemoveListener(GameOver);
+            this.GameLogicScript.FlowGameOverEvent.RemoveListener(GameOver);
             this._gameOverReason = flag;
 
             if(flag == 2)
@@ -260,7 +262,7 @@ namespace StayAwayGameLevelScript
         void GameOverP3()
         {
             this.Camera.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("Hide04"));
-            this.GameLogicScript.GameOver(this._gameOverReason);
+            this.GameLogicScript.FlowGameOver(this._gameOverReason);
         }
         #endregion
 
@@ -290,7 +292,7 @@ namespace StayAwayGameLevelScript
 
         void WinP3()
         {
-            this.GameLogicScript.GameOver(4);
+            this.GameLogicScript.FlowGameOver(4);
         }    
 
         #endregion

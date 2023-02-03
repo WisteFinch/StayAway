@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 namespace StayAwayGameScript
 {
@@ -21,7 +17,7 @@ namespace StayAwayGameScript
         /// <summary>
         /// 追踪率
         /// </summary>
-        public float TrackingRatio = 0.1f;
+        public float TrackingRatio = 5f;
         /// <summary>
         /// 追踪阈值
         /// </summary>
@@ -34,6 +30,10 @@ namespace StayAwayGameScript
         /// 缩放变化率
         /// </summary>
         public float ResizeRatio = 2;
+        /// <summary>
+        /// 最小移动距离
+        /// </summary>
+        public float MinimalMoveDistance = 0.001f;
 
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace StayAwayGameScript
             this._oriBackGroundSize = this.BackGround.transform.localScale;
         }
 
-        void LateUpdate()
+        void FixedUpdate()
         {
             if (this._camera.orthographicSize != this._targetSize)
             {
@@ -82,23 +82,29 @@ namespace StayAwayGameScript
 
             if (this.EnableTracking)
             {
-                var distance = Vector2.Distance(this.transform.position, this._targetTransform.position);
-                if (!_isChangingTarget)
-                {
-                    this.transform.position = new Vector3(this._targetTransform.position.x, this._targetTransform.position.y, -10);
-                }
-                else
-                {
-                    if (distance <= this.TrackingThreshold)
-                    {
-                        this._isChangingTarget = false;
-                    }
-                    else
-                    {
-                        Vector2 pos = Vector2.MoveTowards(this.transform.position, this._targetTransform.position, this.TrackingRatio * Time.deltaTime);
-                        this.transform.position = new Vector3(pos.x, pos.y, -10);
-                    }
-                }
+                //var distance = Vector2.Distance(this.transform.position, this._targetTransform.position);
+                //if (!_isChangingTarget)
+                //{
+                //    this.transform.position = new Vector3(this._targetTransform.position.x, this._targetTransform.position.y, -10);
+                //}
+                //else
+                //{
+                //    if (distance <= this.TrackingThreshold)
+                //    {
+                //        this._isChangingTarget = false;
+                //    }
+                //    else
+                //    {
+                //        Vector2 pos = Vector2.MoveTowards(this.transform.position, this._targetTransform.position, this.TrackingRatio * Time.deltaTime);
+                //        this.transform.position = new Vector3(pos.x, pos.y, -10);
+                //    }
+                //}
+
+                var target = this._targetTransform.position;
+                target.z = -10;
+                var distance = Vector2.Distance(this.transform.position, target);
+                if(distance >= this.MinimalMoveDistance)
+                    this.transform.position = Vector3.MoveTowards(this.transform.position, target, distance * this.TrackingRatio * Time.fixedDeltaTime);
 
                 Vector2 offset = -this.transform.position * this.BackGroundOffsetRatio + this.transform.position;
                 this.BackGround.transform.position = new Vector3(offset.x, offset.y, 0);

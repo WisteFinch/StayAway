@@ -209,7 +209,7 @@ namespace StayAwayGameScript
             // 初始化AI
             this._AISeeker = this.GetComponent<Seeker>();
 
-            this._pellucidity = this.Pony.GetComponent<GameLogic>().SoulPellucidity;
+            this._pellucidity = this.Pony.GetComponent<GameLogic>().RenderSoulPellucidity;
         }
 
         void Update()
@@ -233,15 +233,14 @@ namespace StayAwayGameScript
             }
             else
             {
-
                 // 获取输入
                 GatherInput();
             }
 
-            // 计算行走
-            CalcWalk();
             if (!this.EnableForzen)
             {
+                // 计算行走
+                CalcWalk();
                 // 综合数据，计算位移
                 CalcMove();
             }

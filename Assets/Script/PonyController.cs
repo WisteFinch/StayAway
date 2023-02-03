@@ -309,17 +309,16 @@ namespace StayAwayGameScript
 
             // 获取输入
             GatherInput();
-            // 计算行走
-            CalcWalk();
-            // 计算顶点增益
-            CalcJumpApex();
-            // 计算重力
-            CalcGravity();
-            // 计算跳跃
-            CalcJump();
-
             if (!this.EnableForzen)
             {
+                // 计算行走
+                CalcWalk();
+                // 计算顶点增益
+                CalcJumpApex();
+                // 计算重力
+                CalcGravity();
+                // 计算跳跃
+                CalcJump();
                 // 综合数据，计算位移
                 CalcMove();
             }

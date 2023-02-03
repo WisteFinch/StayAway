@@ -12,7 +12,7 @@ namespace StayAwayGameLevelScript
         public GameObject Pony;
         public GameObject GUI;
         public float CameraTrackingRatioBeginModify = 0.25f;
-        public float CameraTrackingRatioBeginModifyTime = 3;
+        public float CameraTrackingRatioBeginModifyTime = 0;
 
         private float _oriCameraTrackingRatio;
         private int _gameOverReason;
@@ -21,15 +21,17 @@ namespace StayAwayGameLevelScript
         {
             
             this.GameLogicScript = this.Pony.GetComponent<GameLogic>();
-            this._oriCameraTrackingRatio = Camera.GetComponent<CameraController>().TrackingRatio;
-            Camera.GetComponent<CameraController>().TrackingRatio *= this.CameraTrackingRatioBeginModify;
-            Invoke(nameof(RestoreCameraTrackingRatio), this.CameraTrackingRatioBeginModifyTime);
+            //this._oriCameraTrackingRatio = Camera.GetComponent<CameraController>().TrackingRatio;
+            //Camera.GetComponent<CameraController>().TrackingRatio *= this.CameraTrackingRatioBeginModify;
+            //Invoke(nameof(RestoreCameraTrackingRatio), this.CameraTrackingRatioBeginModifyTime);
 
-            this.GameLogicScript.GameOverEvent.AddListener(GameOver);
+            this.GameLogicScript.FlowGameOverEvent.AddListener(GameOver);
 
             GameManager.Instance.InitPlayer();
 
             GameManager.Instance.SetGUI(this.GUI);
+
+            GameManager.Instance.SetLogic(this.GameLogicScript);
         }
 
         void RestoreCameraTrackingRatio()
@@ -40,16 +42,16 @@ namespace StayAwayGameLevelScript
         #region ½áÊø¶¯»­
         void GameOver(int flag)
         {
-            this.GameLogicScript.GameOverEvent.RemoveListener(GameOver);
+            this.GameLogicScript.FlowGameOverEvent.RemoveListener(GameOver);
             this._gameOverReason = flag;
             Invoke(nameof(GameOverP2), 1);
         }
 
         void GameOverP2()
         {
-            this.GameLogicScript.GameOverEvent.RemoveListener(GameOver);
+            this.GameLogicScript.FlowGameOverEvent.RemoveListener(GameOver);
 
-            this.GameLogicScript.GameOver(this._gameOverReason);
+            this.GameLogicScript.FlowGameOver(this._gameOverReason);
         }
 
         #endregion

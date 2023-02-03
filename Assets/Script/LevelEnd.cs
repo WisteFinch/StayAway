@@ -10,7 +10,7 @@ namespace StayAwayGameScript
         {
             if (collision.gameObject.CompareTag("Pony"))
             {
-                collision.gameObject.GetComponent<GameLogic>().GameOver(0);
+                collision.gameObject.GetComponent<GameLogic>().FlowGameOver(0);
             }
         }
     }

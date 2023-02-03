@@ -58,7 +58,8 @@ namespace StayAwayGameScript
         /// </summary>
         private Animator _animator;
 
-        private int _currentPlaying = 0; // 0 ÎÞ 1 ½¥ºÚ 2 ½¥°× 3 ÎÄ×Ö
+        //private int _currentPlaying = 0; // 0 ÎÞ 1 ½¥ºÚ 2 ½¥°× 3 ÎÄ×Ö
+
         /// <summary>
         /// ¿ªÆôÄ»²¼
         /// </summary>
@@ -268,6 +269,28 @@ namespace StayAwayGameScript
         void TextOff()
         {
             this._animator.SetTrigger("TextOff");
+        }
+
+        public void OnMenuBack()
+        {
+            this._animator.SetTrigger("MenuOff");
+            GameManager.Instance.GetLogic().SetControllerLock(false);
+            GameManager.Instance.GetLogic().SetForzen(false);
+        }
+
+        public void OnMenuReload()
+        {
+            GameManager.Instance.LoadLevel();
+        }
+
+        public void OnMenuExit()
+        {
+            GameManager.Instance.LoadLevel(StayAwayGame.Level.Start);
+        }
+
+        public void ShowMenu()
+        {
+            this._animator.SetTrigger("MenuOn");
         }
     }
 }

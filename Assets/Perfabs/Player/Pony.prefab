@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7117585220608933298
 Transform:
   m_ObjectHideFlags: 0
@@ -550,53 +550,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90db85827f8dc354d993a02330286916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HasLight: 0
-  HasLyra: 0
-  PonyIsDead: 0
-  SoulIsDead: 0
-  CurrentMagic: 0
+  OBJPony: {fileID: 1907533329401665013}
+  OBJSoul: {fileID: 0}
+  OBJMainCamera: {fileID: 0}
+  OBJGlobalVolume: {fileID: 0}
+  OBJGUI: {fileID: 0}
+  OBJLyraPerfab: {fileID: 3205736200453321844, guid: c9a9e3c779882da46820a3fd1b733b0c, type: 3}
+  OBJLight: {fileID: 520186835980122752}
+  CHARPonyIsDead: 0
+  CHARSoulIsDead: 0
+  CHAREnableChangeCharacter: 1
+  ItemHasLight: 0
+  ItemHasLyra: 0
+  ItemPickupTime: 2
+  ItemPickupOffset: {x: 0, y: 0.5}
+  ItemPickupCameraResize: -1
+  ItemEnableLight: 0
+  MagicCurrent: 0
   MagicLeft: 0
-  NextLevelName: level_end
-  ThisLevelName: level_end
-  EnableEffect: 1
-  EnableChangeCharacter: 1
-  Pony: {fileID: 1907533329401665013}
-  Soul: {fileID: 0}
-  MainCamera: {fileID: 0}
-  GlobalVolume: {fileID: 0}
-  UI: {fileID: 0}
-  LyraObj: {fileID: 3205736200453321844, guid: c9a9e3c779882da46820a3fd1b733b0c, type: 3}
-  MinimalPonyToSoulDistance: 1
-  MaximalPonyToSoulDistance: 5
-  TooCloseDeadTime: 2
-  TooCloseDeadDecayTime: 4
-  TooFarDeadTime: 2
-  TooFarDeadDecayTime: 4
-  CameraSize: 3
-  SoulPellucidity: 0.4
-  IllusionDistance: 1
-  IllusionWeight: 1
-  BlackoutWeight: 1
-  FadingDistance: 1
-  FadingWeight: 0.8
-  VanishWeight: 0.2
-  DistanceCircleDefaultColor: {r: 255, g: 255, b: 255, a: 1}
-  DistanceCircleDangerColor: {r: 0.9339623, g: 0.039649326, b: 0.5370692, a: 1}
-  DistanceCirclePellucidity: 0.5
-  DistanceCircleDisplayDistance: 2
-  PonyLightColorStart: {r: 1, g: 0.33577096, b: 0, a: 1}
-  PonyLightColorEnd: {r: 0.9811321, g: 0.66855407, b: 0.36561054, a: 1}
-  SoulLightColorStart: {r: 0, g: 0.32168436, b: 1, a: 1}
-  SoulLightColorEnd: {r: 0.3244037, g: 0.50802267, b: 0.8490566, a: 1}
-  Light: {fileID: 520186835980122752}
-  PickupItemTime: 2
-  PickupItemOffset: {x: 0, y: 0.5}
-  PickupItemCameraResize: -1
   MagicUsageCount: 5
-  GetMagicTime: 2
-  GetMagicOffset: {x: 0, y: 0.5}
-  GetMagicCameraResize: -1
-  GameOverEvent:
+  MagicGetTime: 2
+  MagicGetOffset: {x: 0, y: 0.5}
+  MagicGetCameraResize: -1
+  RenderSoulPellucidity: 0.5
+  RenderEnableEffect: 1
+  DSTMinimalPonyToSoulDistance: 1
+  DSTMaximalPonyToSoulDistance: 5
+  DSTTooCloseDeadTime: 2
+  DSTTooCloseDeadDecayTime: 4
+  DSTTooFarDeadTime: 2
+  DSTTooFarDeadDecayTime: 4
+  DSTIllusionDistance: 1
+  DSTIllusionWeight: 1
+  DSTBlackoutWeight: 1
+  DSTFadingDistance: 1
+  DSTFadingWeight: 0.8
+  DSTVanishWeight: 0.2
+  DSTCircleDefaultColor: {r: 255, g: 255, b: 255, a: 1}
+  DSTCircleDangerColor: {r: 0.7490196, g: 0.29411766, b: 0.29411766, a: 1}
+  DSTCirclePellucidity: 0.5
+  DSTCircleDisplayDistance: 2
+  CameraSize: 3
+  FlowNextLevel: 1000
+  FlowThisLevel: 1000
+  FlowGameOverEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &5824793825091847464
@@ -756,6 +753,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6442898940597651557}
   - component: {fileID: 4303082971858576242}
+  - component: {fileID: 7629578723511869130}
   m_Layer: 6
   m_Name: Audio
   m_TagString: Audio
@@ -874,3 +872,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7629578723511869130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9183480769129531048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25203058269d86c4094fa245a7175b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioType: 1

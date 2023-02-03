@@ -10,7 +10,7 @@ namespace StayAwayGameLevelScript
     {
         public float OffsetRatio = 0.5f;
 
-        public GameObject UISky, UIBCloud, UIFCloud, UISSky, UISBCloud, UISFCloud, UIButtonStart, UIButtonExit, UIButtonBackToMain;
+        public GameObject UISky, UIBCloud, UIFCloud, UISSky, UISBCloud, UISFCloud, UIButtonStart, UIButtonConf, UIButtonExit, UIButtonBack, UIConfAudioMain, UIConfAudioBGM, UIConfAudioEffect;
         public GameObject UIS1I, UIS1N, UIS1D, UIS1O, UIS1OT;
         public GameObject UIS2I, UIS2N, UIS2D, UIS2O, UIS2OT;
         public GameObject UIS3I, UIS3N, UIS3D, UIS3O, UIS3OT;
@@ -25,7 +25,7 @@ namespace StayAwayGameLevelScript
         Vector3 _UISkyPosOri, _UIBCloudPosOri, _UIFCloudPosOri, _UISSkyPosOri, _UISBCloudPosOri, _UISFCloudPosOri;
         Boolean _enableOffset;
 
-        PlayerDataSystem.PlayerData.DataStruct _currentPlayerSave;
+        SavesDataSystem.SavesData.DataStruct _currentPlayerSave;
         int _currentPlayerIndex;
         Vector2 _mouseFluentPos;
 
@@ -41,6 +41,8 @@ namespace StayAwayGameLevelScript
 
             Vector2 screenSize = new(UnityEngine.Screen.width, UnityEngine.Screen.height);
             this._mouseFluentPos = new(screenSize.x/2, 0);
+
+            SyncConf();
         }
 
         void Update()
@@ -65,9 +67,14 @@ namespace StayAwayGameLevelScript
             this.GetComponent<Animator>().SetTrigger("MainToSaves");
         }
 
-        public void OnBackToMainButtonDown()
+        public void OnBackButtonDown()
         {
-            this.GetComponent<Animator>().SetTrigger("SavesToMain");
+            this.GetComponent<Animator>().SetTrigger("Back");
+            Debug.Log("Back");
+        }
+        public void OnConfButtonDown()
+        {
+            this.GetComponent<Animator>().SetTrigger("MainToConf");
         }
 
         public void OnBackToSavesButtonDown()
@@ -76,10 +83,10 @@ namespace StayAwayGameLevelScript
         }
         public void OnSelectButtonDown(int index)
         {
-            if (GameManager.Instance.PlayerSystem.GetPlayerData(index).Enable)
+            if (GameManager.Instance.GetSavesData(index).Enable)
             {
                 this._currentPlayerIndex = index;
-                this._currentPlayerSave = GameManager.Instance.PlayerSystem.GetPlayerData(index);
+                this._currentPlayerSave = GameManager.Instance.GetSavesData(index);
                 this.GetComponent<Animator>().SetTrigger("Start");
             }
             else
@@ -93,9 +100,9 @@ namespace StayAwayGameLevelScript
         }
         public void OnSavesOptionButtonDown(int index)
         {
-            if (GameManager.Instance.PlayerSystem.GetPlayerData(index).Enable)
+            if (GameManager.Instance.GetSavesData(index).Enable)
             {
-                GameManager.Instance.PlayerSystem.RestorePlayerData(index);
+                GameManager.Instance.RestoreSavesData(index);
                 LoadPlayer(index);
             }
             else
@@ -163,30 +170,26 @@ namespace StayAwayGameLevelScript
         public void DisableButton()
         {
             this.UIButtonExit.GetComponent<Button>().enabled = false;
+            this.UIButtonConf.GetComponent<Button>().enabled = false;
             this.UIButtonStart.GetComponent<Button>().enabled = false;
-            this.UIButtonBackToMain.GetComponent<Button>().enabled = false;
+            this.UIButtonBack.GetComponent<Button>().enabled = false;
         }    
 
-        public void EnableButton(int scene)
+        public void EnableButton()
         {
-            if(scene == 0)
-            {
-                this.UIButtonExit.GetComponent<Button>().enabled = true;
-                this.UIButtonStart.GetComponent<Button>().enabled = true;
-            }
-            else if(scene == 1)
-            {
-                this.UIButtonBackToMain.GetComponent<Button>().enabled = true;
-            }    
+            this.UIButtonExit.GetComponent<Button>().enabled = true;
+            this.UIButtonConf.GetComponent<Button>().enabled = true;
+            this.UIButtonStart.GetComponent<Button>().enabled = true;
+            this.UIButtonBack.GetComponent<Button>().enabled = true;
         }
 
         public void GameStart()
         {
             this._currentPlayerSave.Enable = true;
             this._currentPlayerSave.Date = System.DateTime.Now.Year.ToString() + "年" + System.DateTime.Now.Month.ToString() + "月" + System.DateTime.Now.Day.ToString() + "日" + System.DateTime.Now.Hour.ToString() + "时" + System.DateTime.Now.Minute.ToString() + "分" + System.DateTime.Now.Second.ToString() + "秒";
-            GameManager.Instance.SetPlayerIndex(this._currentPlayerIndex);
-            GameManager.Instance.SetPlayerData(this._currentPlayerSave, _currentPlayerIndex);
-            GameManager.Instance.PlayerSystem.SavePlayerData();
+            GameManager.Instance.SetSavesIndex(this._currentPlayerIndex);
+            GameManager.Instance.SetSavesData(this._currentPlayerSave, _currentPlayerIndex);
+            GameManager.Instance.StoreSavesData();
             GameManager.Instance.LoadLevel();
         }
 
@@ -201,7 +204,7 @@ namespace StayAwayGameLevelScript
 
         public void LoadPlayer(int i)
         {
-            var data = GameManager.Instance.GetPlayerData(i);
+            var data = GameManager.Instance.GetSavesData(i);
             if (i == 1)
             {
                 if (data.Enable)
@@ -259,6 +262,13 @@ namespace StayAwayGameLevelScript
                     this.UIS3OT.GetComponent<Text>().text = this.UISavesOptionNewText;
                 }
             }
+        }
+
+        void SyncConf()
+        {
+            this.UIConfAudioMain.GetComponent<ConfigItemSync>().Fetch();
+            this.UIConfAudioBGM.GetComponent<ConfigItemSync>().Fetch();
+            this.UIConfAudioEffect.GetComponent<ConfigItemSync>().Fetch();
         }
     }
 }

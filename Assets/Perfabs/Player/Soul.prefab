@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3934113581856843553}
   - component: {fileID: 2899834129750197488}
+  - component: {fileID: 570112126478927604}
   m_Layer: 6
   m_Name: MagicEmitAudio
   m_TagString: Untagged
@@ -128,6 +129,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &570112126478927604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4941183440523602890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25203058269d86c4094fa245a7175b43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioType: 1
 --- !u!1 &6509422916987116840
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EnableControl: 0
+  EnableForzen: 0
   EnableAI: 0
   Velocity: {x: 0, y: 0}
   RelativeVelocity: {x: 0, y: 0}

@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public bool FireKeyDown = false;
     public bool LightKeyDown = false;
     public bool ChangeCharacterKeyDown = false;
+    public bool EscapeKeyDown = false;
     public Vector2 MoveAxis = Vector2.zero;
     public Vector2 MousePosition = Vector2.zero;
 
@@ -29,6 +30,7 @@ public class InputManager : MonoBehaviour
         this.FireKeyDown = false;
         this.LightKeyDown = false;
         this.ChangeCharacterKeyDown = false;
+        this.EscapeKeyDown = false;
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -73,5 +75,11 @@ public class InputManager : MonoBehaviour
     {
         if (context.phase == InputActionPhase.Started)
             this.ChangeCharacterKeyDown = true;
+    }
+
+    public void OnEscape(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+            this.EscapeKeyDown = true;
     }
 }

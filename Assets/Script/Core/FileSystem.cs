@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace StayAwayGameScript
 {
-    public static class SaveSystem
+    public static class FileSystem
     {
         public static void Save(string path, object data)
         {
